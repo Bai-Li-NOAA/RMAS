@@ -153,7 +153,7 @@ recruitment$estimate_deviations <- TRUE
 recruitment$constrained_deviations <- FALSE
 recruitment$deviations_min <- -15.0
 recruitment$deviations_max <- 15.0
-recruitment$deviation_phase <- 1
+recruitment$deviation_phase <- 2
 recruitment$SetDeviations(rep(0.0, times=om_input$nyr))
 
 ```
@@ -220,8 +220,8 @@ movement$connectivity_recruits <- c(1.0)
 
 initial_deviations <- new(r4mas$InitialDeviations)
 initial_deviations$values <- rep(0, times=om_input$nages)
-initial_deviations$estimate <- FALSE
-initial_deviations$phase <- 1
+initial_deviations$estimate <- TRUE
+initial_deviations$phase <- 2
 
 ```
 
@@ -423,7 +423,7 @@ om$selexparm_survey <- om_input$sel_survey
 ```
 
 ### Aggregate estimates of key variables from the `MAS`
-Still need to add biological reference points and selectivity-at-age to `MAS` outputs.
+Still need to add R0, biological reference points, and selectivity-at-age to `MAS` outputs.
 ```{r}
 
 popdy<-mas_output$population_dynamics
