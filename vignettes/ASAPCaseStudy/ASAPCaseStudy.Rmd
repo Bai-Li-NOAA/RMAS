@@ -65,9 +65,10 @@ recruitment$h$min <- 0.2001
 recruitment$h$max <- 1.0
 
 recruitment$sigma_r$value <- exp(sqrt(log((asap_input$recruit_cv[1,])^2+1)))
-recruitment$sigma_r$estimated <- FALSE # always not estimate sigma_r?
+recruitment$sigma_r$estimated <- FALSE #
+# recruitment$sigma_r$estimated <- TRUE # ASAP fix it
 recruitment$sigma_r$min <- 0
-recruitment$sigma_r$max <- 1.0
+recruitment$sigma_r$max <- 3
 recruitment$sigma_r$phase <- 2
 
 recruitment$estimate_deviations <- 
@@ -93,8 +94,9 @@ ssb_empirical_weight <-
 jan1_waa_pointer <- asap_input$WAA_pointers[fleet_num*2+2+2]
 jan1_empirical_weight <- 
   as.vector(t(asap_input$WAA_mats[[jan1_waa_pointer]]))
-  
-survey_num <- asap_input$n_indices
+
+survey_num <- 1 # How to set survey empirical weight-at-age for more than 1 survey? And add the information to growth$SetUndifferentiatedSurveyWeight and population$SetGrowth
+#survey_num <- asap_input$n_indices
 survey_empirical_weight <- vector(mode="list", length=survey_num)
 for (i in 1:survey_num) {
   if (asap_input$index_units[i]==1) {
@@ -145,7 +147,7 @@ population$AddMaturity(maturity$id,area1$id, "undifferentiated")
 population$AddRecruitment(recruitment$id, 1, area1$id)
 population$SetInitialDeviations(initial_deviations$id, area1$id, "undifferentiated")
 population$SetGrowth(growth$id)
-population$sex_ratio <- 1
+#population$sex_ratio <- 1 Is the default sex_ratio is 0.5? Can we have other options?
 
 # Catch index values and observation errors
 for (i in 1:fleet_num){
@@ -334,5 +336,126 @@ mas_model$Reset()
 
 # Import MAS output
 mas_output <- jsonlite::read_json(file.path(data_dir, "mas_output.json"))
+
+```
+
+## Aggregate estimates of key variables from the `ASAP`
+```{r}
+# Read ASAP outputs
+asap_output <- dget(file.path(data_dir, "asap3.rdat"))
+      
+asap <- list()
+
+asap$biomass <- asap_output$tot.jan1.B
+asap$abundance <- apply(asap_output$N.age, 1, sum)
+asap$ssb <- asap_output$SSB
+asap$recruit <- asap_output$N.age[,1]
+asap$f <- apply(asap_output$fleet.FAA$FAA.directed.fleet1, 1, max)
+asap$landing <- asap_output$catch.pred
+asap$survey <- asap_output$index.pred$ind0
+asap$agecomp <- apply(asap_output$N.age, 1, function(x) x/sum(x))
+asap$r0 <- asap_output$SR.parms$SR.R0
+asap$q <- asap_output$q.indices[1]
+```
+
+## Aggregate estimates of key variables from the `MAS`
+### Value and gradient of estimated paramter
+```{r}
+
+parameter <- unlist(mas_output$estimated_parameters$parameters)
+parameter_table <- as.data.frame(matrix(parameter, ncol=3, byrow=TRUE))
+colnames(parameter_table) <- c("Parameter", 
+                               "Value",
+                               "Gradient")
+parameter_table$Value <- round(as.numeric(parameter_table$Value),
+                                digits = 6)
+parameter_table$Gradient <- round(as.numeric(parameter_table$Gradient),
+                                digits = 6)
+
+parameter_table
+```
+
+```{r}
+
+popdy<-mas_output$population_dynamics
+pop<-popdy$populations[[1]]
+flt<-popdy$fleets[[1]]
+srvy<-popdy$surveys[[1]]
+
+mas <- list()
+
+mas$biomass <- unlist(pop$undifferentiated$biomass$values)
+mas$abundance <- unlist(pop$undifferentiated$abundance$values)
+mas$ssb <- unlist(pop$undifferentiated$spawning_stock_biomass$values)
+mas$recruit <- unlist(pop$undifferentiated$recruits$values)
+mas$f <- unlist(pop$undifferentiated$fishing_mortality$values)
+mas$landing <- unlist(flt$undifferentiated$catch_biomass$values)
+mas$survey <- unlist(srvy$undifferentiated$survey_biomass$values)
+mas$agecomp <- apply(
+  matrix(unlist(pop$undifferentiated$numbers_at_age$values),
+         nrow=popdy$nyears, 
+         ncol=popdy$nages, 
+         byrow = T), 
+  1, 
+  function(x) x/sum(x))
+mas$r0 <- exp(parameter_table$Value[parameter_table$Parameter=="log_R0_1"])
+mas$q <- list(parameter_table$Value[parameter_table$Parameter=="q_1"]/1000)
+
+```
+
+## Generate comparison figures
+Compare temporal trends of biomass(B), abundance(A), spawning stock biomass (SSB), recruit (R), fishinig mortality (F), Landings (L), and Survey index (SI) from the OM (dots) and `MAS` (lines).
+```{r}
+years <- as.numeric(rownames(asap_output$N.age))
+par(mfrow=c(4, 2), mar=c(3, 3, 0, 0))
+var <- c("biomass", "abundance", "ssb", "recruit", "f", 
+         "landing", "survey")
+ylab <- c("B (mt)", "A (1000 fish)", 
+          "SSB (mt)", "R (1000 fish)", 
+          "F", "L (mt)", "SI (scaled)")
+for(i in 1:length(var)){
+  ylim = range(asap[[var[i]]], mas[[var[i]]])
+  plot(years, asap[[var[i]]], 
+       xlab="", ylab="", 
+       ylim=ylim, pch=19)
+  lines(years, mas[[var[i]]], 
+        col="deepskyblue3", lty=1)
+  mtext("Year", side=1, line=2, cex=0.7)
+  mtext(ylab[i], side=2, line=2, cex=0.7)
+}
+plot.new()
+legend("center",
+       c("OM", "MAS"), 
+       pch=c(19, NA),
+       lty=c(NA, 1), 
+       col=c("black", "deepskyblue3"), 
+       bty="n")
+```
+
+Compare age composition from the OM (dots) and `MAS` (lines).
+```{r}
+par(mfrow=c(8, 4), mar=c(3, 3, 0, 0))
+var <- c("agecomp")
+ylab <- c("Proportion")
+for(i in 1:ncol(asap[[var]])){
+  ylim = range(asap[[var]][,i], mas[[var]][,i])
+  plot(ages, asap[[var]][,i], 
+       xlab="", ylab="", 
+       ylim=ylim, pch=19)
+  lines(ages, mas[[var]][,i], 
+        col="deepskyblue3", lty=1)
+  mtext("Age", side=1, line=2, cex=0.7)
+  mtext(ylab, side=2, line=2, cex=0.7)
+  legend("topright",
+         paste("Year", years[i]), 
+         bty="n")
+}
+plot.new()
+legend("topright",
+       c("OM", "MAS"), 
+       pch=c(19, NA),
+       lty=c(NA, 1), 
+       col=c("black", "deepskyblue3"), 
+       bty="n")
 
 ```
