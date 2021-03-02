@@ -1,0 +1,338 @@
+---
+title: "ASAP Case Study"
+author: "Christine Stawitz and Bai Li"
+date: "Created on August 5, 2019; Updated on `r format(Sys.time(), '%m/%d/%Y')`"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+---
+
+## Install and library packages
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+
+# remotes::install_github("nmfs-fish-tools/RMAS")
+# devtools::install_github("cmlegault/ASAPplots", dependencies=FALSE)
+
+library(RMAS)
+library(Rcpp)
+library(jsonlite)
+library(ASAPplots)
+
+```
+
+## Read ASAP input file
+```{r}
+
+data_dir <- "C:/Users/bai.li/Documents/Github/RMAS/vignettes/ASAPCaseStudy"
+asap_input <- ReadASAP3DatFile(file.path(data_dir, "ASAPSimple.dat"))$dat
+
+```
+
+## Convert ASAP inputs to MAS inputs
+```{r}
+
+# Load RMAS module
+r4mas <- Rcpp::Module("rmas", PACKAGE="RMAS")
+
+# General settings
+nyears <- asap_input$n_years
+
+nseasons <- 1
+
+nages <- asap_input$n_ages
+
+ages <-  1:asap_input$n_ages
+
+area1 <- new(r4mas$Area)
+area1$name <- "area1"
+
+# Recruitment settings
+recruitment <- new(r4mas$BevertonHoltRecruitment)
+
+recruitment$R0$value <- asap_input$SR_scalar_ini
+recruitment$R0$estimated <- 
+  ifelse (asap_input$phase_SR_scalar<0, FALSE, TRUE)
+recruitment$R0$phase <- abs(asap_input$phase_SR_scalar)
+
+recruitment$h$value <- asap_input$steepness_ini
+recruitment$h$estimated <- 
+  ifelse(asap_input$phase_steepness < 0, FALSE, TRUE)
+recruitment$h$phase <- abs(asap_input$phase_steepness)
+recruitment$h$min <- 0.2001
+recruitment$h$max <- 1.0
+
+recruitment$sigma_r$value <- exp(sqrt(log((asap_input$recruit_cv[1,])^2+1)))
+recruitment$sigma_r$estimated <- FALSE # always not estimate sigma_r?
+recruitment$sigma_r$min <- 0
+recruitment$sigma_r$max <- 1.0
+recruitment$sigma_r$phase <- 2
+
+recruitment$estimate_deviations <- 
+  ifelse(asap_input$phase_rec_devs < 0, FALSE, TRUE)
+recruitment$constrained_deviations <- TRUE
+recruitment$deviations_min <- -15.0
+recruitment$deviations_max <- 15.0
+recruitment$deviation_phase <- abs(asap_input$phase_rec_devs)
+recruitment$SetDeviations(rep(0.0, times=nyears))
+
+# Growth settings
+growth <- new(r4mas$VonBertalanffyModified)
+
+fleet_num <- asap_input$n_fleets
+catch_waa_pointer <- asap_input$WAA_pointers[fleet_num*2+1]
+catch_empirical_weight <-
+  as.vector(t(asap_input$WAA_mats[[catch_waa_pointer]])) # Total catch
+
+ssb_waa_pointer <- asap_input$WAA_pointers[fleet_num*2+2+1]
+ssb_empirical_weight <- 
+  as.vector(t(asap_input$WAA_mats[[ssb_waa_pointer]]))
+  
+jan1_waa_pointer <- asap_input$WAA_pointers[fleet_num*2+2+2]
+jan1_empirical_weight <- 
+  as.vector(t(asap_input$WAA_mats[[jan1_waa_pointer]]))
+  
+survey_num <- asap_input$n_indices
+survey_empirical_weight <- vector(mode="list", length=survey_num)
+for (i in 1:survey_num) {
+  if (asap_input$index_units[i]==1) {
+    survey_empirical_weight[[i]] <- 
+      as.vector(t(jan1_empirical_weight))
+  } # Survey unit is biomass
+  
+  if (asap_input$index_units[i]==2) {
+    survey_empirical_weight[[i]] <- replicate(nages*nyears, 1.0) 
+  } # Survey unit is number 
+}
+
+growth$SetUndifferentiatedCatchWeight(catch_empirical_weight)
+growth$SetUndifferentiatedWeightAtSeasonStart(jan1_empirical_weight)
+growth$SetUndifferentiatedWeightAtSpawning(ssb_empirical_weight)
+growth$SetUndifferentiatedSurveyWeight(survey_empirical_weight[[1]]) # How to set emprical weight-at-age for two surveys? One survey unit is biomass and the other survey unit is number. The data are stored in survey_empirical_weight list.
+
+# Maturity settings
+maturity <- new(r4mas$Maturity)
+maturity$values <- asap_input$maturity[1,] # Time-invariant
+
+# Natural mortality settings
+natural_mortality <- new(r4mas$NaturalMortality)
+natural_mortality$SetValues(asap_input$M[1,]) # Time-invariant
+
+# Movement settings
+movement <- new(r4mas$Movement)
+movement$connectivity_females <- c(1.0)
+movement$connectivity_males <- c(1.0)
+movement$connectivity_recruits <- c(1.0)
+
+# Initial deviations
+initial_deviations <- new(r4mas$InitialDeviations)
+initial_deviations$values <- rep(0, times=nages)
+initial_deviations$estimate <- 
+  ifelse(asap_input$phase_N1_devs < 0, FALSE, TRUE)
+initial_deviations$phase <- abs(asap_input$phase_N1_devs)
+
+# Create population
+population=new(r4mas$Population)
+for (y in 1:(nyears))
+{
+  population$AddMovement(movement$id, y)
+}
+
+population$AddNaturalMortality(natural_mortality$id,area1$id,"undifferentiated")
+population$AddMaturity(maturity$id,area1$id, "undifferentiated")
+population$AddRecruitment(recruitment$id, 1, area1$id)
+population$SetInitialDeviations(initial_deviations$id, area1$id, "undifferentiated")
+population$SetGrowth(growth$id)
+population$sex_ratio <- 1
+
+# Catch index values and observation errors
+for (i in 1:fleet_num){
+  catch_index <- new(r4mas$IndexData)
+  catch_index$values <- asap_input$CAA_mats[[i]][, (nages+1)]
+  catch_index$error <- asap_input$catch_cv[, i]
+}
+
+# Catch composition data
+for (i in 1:fleet_num){
+  catch_comp <- new(r4mas$AgeCompData)
+  catch_comp$values <- as.vector(t(asap_input$CAA_mats[[i]][, (1:nages)]))
+  catch_comp$sample_size <- asap_input$catch_Neff[, i]
+}
+
+# Likelihood component settings
+fleet_index_comp_nll <- new(r4mas$Lognormal)
+fleet_index_comp_nll$use_bias_correction <- FALSE
+
+fleet_age_comp_nll <- new(r4mas$Multinomial)
+
+# # Fleet selectivity settings
+for (i in 1:fleet_num){
+  selectivity_option <- asap_input$sel_block_option[i]
+
+  if (selectivity_option==1) {
+    fleet_selectivity <- new(r4mas$AgeBasedSelectivity)
+    fleet_selectivity$estimated <- TRUE # if it is age based selectivity, can you estimate some values and fix the other values?
+    fleet_selectivity$phase <- 2 # if it is age based selectivity, can you estimate some values and fix the other values?
+    # fleet_selectivity$estimated <-
+    #   ifelse(asap_input$sel_ini[[i]][(1:nages), 2] < 0, FALSE, TRUE)
+    # fleet_selectivity$phase <- asap_input$sel_ini[[i]][(1:nages), 2]
+    fleet_selectivity$values <- asap_input$sel_ini[[i]][(1:nages),1]
+  }
+
+  if (selectivity_option==2) {
+    fleet_selectivity <- new(r4mas$LogisticSelectivity)
+    fleet_selectivity$a50$value <- asap_input$sel_ini[[i]][(nages+2), 1]
+    fleet_selectivity$a50$estimated <-
+      ifelse(asap_input$sel_ini[[i]][(nages+2), 2] < 0, FALSE, TRUE)
+    fleet_selectivity$a50$phase <- asap_input$sel_ini[[i]][(nages+2), 2]
+    fleet_selectivity$a50$min <- 0.0001
+    fleet_selectivity$a50$max <- nages
+
+    fleet_selectivity$slope$value <- asap_input$sel_ini[[i]][(nages+1), 1]
+    fleet_selectivity$slope$estimated <- ifelse(asap_input$sel_ini[[i]][(nages+1), 2] < 0, FALSE, TRUE)
+    fleet_selectivity$slope$phase <- asap_input$sel_ini[[i]][(nages+1), 2]
+    fleet_selectivity$slope$min <- 0.0001
+    fleet_selectivity$slope$max <- nages
+  }
+
+ # Add double-logistic case later
+
+}
+
+# Fishing mortality settings
+fishing_mortality <- new(r4mas$FishingMortality)
+fishing_mortality$estimate <- TRUE
+fishing_mortality$phase <- asap_input$phase_F1
+fishing_mortality$min <- 0.0
+fishing_mortality$max <- asap_input$Fmax
+fishing_mortality$SetValues(rep(asap_input$F1_ini, nyears))
+
+# Create the fleet
+fleet <- new(r4mas$Fleet)
+fleet$AddIndexData(catch_index$id, "undifferentiated")
+fleet$AddAgeCompData(catch_comp$id, "undifferentiated")
+fleet$SetIndexNllComponent(fleet_index_comp_nll$id)
+fleet$SetAgeCompNllComponent(fleet_age_comp_nll$id)
+fleet$AddSelectivity(fleet_selectivity$id, 1, area1$id)
+fleet$AddFishingMortality(fishing_mortality$id, 1, area1$id)
+
+# Survey index values and observation errors
+survey_index <- vector(mode="list", length=survey_num)
+for (i in 1:survey_num){
+  survey_index[[i]] <- new(r4mas$IndexData)
+  survey_index[[i]]$values <- asap_input$IAA_mats[[i]][,2]
+  survey_index[[i]]$error <- asap_input$IAA_mats[[i]][,3]
+}
+
+# Survey composition
+survey_comp <- vector(mode="list", length=survey_num)
+for (i in 1:survey_num){
+  survey_comp[[i]] <- new(r4mas$AgeCompData)
+  survey_comp[[i]]$values <- asap_input$IAA_mats[[i]][,4:(4+nages-1)]
+  survey_comp[[i]]$sample_size <- asap_input$IAA_mats[[i]][,(4+nages)]
+}
+
+# Likelihood component settings
+survey_index_comp_nll <- vector(mode="list", length=survey_num)
+survey_age_comp_nll <- vector(mode="list", length=survey_num)
+for (i in 1:survey_num){
+  survey_index_comp_nll[[i]] <- new(r4mas$Lognormal)
+  survey_index_comp_nll[[i]]$use_bias_correction <- FALSE
+
+  survey_age_comp_nll[[i]] <- new(r4mas$Multinomial)
+}
+
+# Survey selectivity settings
+survey_selectivity <- vector(mode="list", length=survey_num)
+for (i in 1:survey_num){
+  selectivity_option <- asap_input$index_sel_option[i]
+
+  if (selectivity_option==1) {
+    survey_selectivity[[i]] <- new(r4mas$AgeBasedSelectivity)
+    survey_selectivity[[i]]$estimated <- FALSE # if it is age based selectivity, can you estimate some values and fix the other values?
+    survey_selectivity[[i]]$phase <- 1
+    # survey_selectivity[[i]]$estimated <- ifelse(asap_input$index_sel_ini[[i]][(1:nages), 2] < 0, FALSE, TRUE)
+    # survey_selectivity[[i]]$phase <- asap_input$index_sel_ini[[i]][(1:nages), 2]
+    survey_selectivity[[i]]$values <- asap_input$index_sel_ini[[i]][(1:nages),1]
+
+  }
+
+  if (selectivity_option==2) {
+    survey_selectivity[[i]] <- new(r4mas$LogisticSelectivity)
+    survey_selectivity[[i]]$a50$value <- asap_input$index_sel_ini[[i]][(nages+2), 1]
+    survey_selectivity[[i]]$a50$estimated <- ifelse(asap_input$index_sel_ini[[i]][(nages+2), 2] < 0, FALSE, TRUE)
+    survey_selectivity[[i]]$a50$phase <- asap_input$index_sel_ini[[i]][(nages+2), 2]
+    survey_selectivity[[i]]$a50$min <- 0.0001
+    survey_selectivity[[i]]$a50$max <- nages
+
+    survey_selectivity[[i]]$slope$value <- asap_input$index_sel_ini[[i]][(nages+1), 1]
+    survey_selectivity[[i]]$slope$estimated <- ifelse(asap_input$index_sel_ini[[i]][(nages+1), 2] < 0, FALSE, TRUE)
+    survey_selectivity[[i]]$slope$phase <- asap_input$index_sel_ini[[i]][(nages+1), 2]
+    survey_selectivity[[i]]$slope$min <- 0.0001
+    survey_selectivity[[i]]$slope$max <- nages
+  }
+
+  # Add double-logistic case later
+
+}
+
+# Create the survey
+survey <- vector(mode="list", length=survey_num)
+for (i in 1:survey_num){
+  survey[[i]] <- new(r4mas$Survey)
+  
+  survey[[i]]$AddIndexData(survey_index[[i]]$id, "undifferentiated")
+  survey[[i]]$AddAgeCompData(survey_comp[[i]]$id, "undifferentiated")
+  survey[[i]]$SetIndexNllComponent(survey_index_comp_nll[[i]]$id)
+  survey[[i]]$SetAgeCompNllComponent(survey_age_comp_nll[[i]]$id)
+  survey[[i]]$AddSelectivity(survey_selectivity[[i]]$id, 1, area1$id)
+  
+  survey[[i]]$q$value <- asap_input$q_ini[i]
+  survey[[i]]$q$min <- 0
+  survey[[i]]$q$max <- 10
+  survey[[i]]$q$estimated <- ifelse(asap_input$phase_q<0, FALSE, TRUE)
+  survey[[i]]$q$phase <- abs(asap_input$phase_q)
+}
+
+```
+
+## Build the MAS model
+```{r}
+
+mas_model <- new(r4mas$MASModel)
+
+mas_model$nyears <- nyears
+mas_model$nseasons <- nseasons
+mas_model$nages <- nages
+mas_model$extended_plus_group <- max(ages)
+mas_model$ages <- ages
+mas_model$catch_season_offset <- 0.0
+mas_model$spawning_season_offset <- asap_input$fracyr_spawn
+mas_model$survey_season_offset <- asap_input$index_month[1]
+
+mas_model$AddPopulation(population$id)
+mas_model$AddFleet(fleet$id)
+for (i in 1:survey_num){
+  mas_model$AddSurvey(survey[[i]]$id)
+}
+
+```
+
+## Run `MAS`, save `MAS` outputs, and reset `MAS`
+```{r}
+# Run MAS
+mas_model$Run()
+
+# Write MAS outputs to a json file
+write(mas_model$GetOutput(),
+      file=file.path(data_dir, "mas_output.json"))
+
+# Reset MAS for next run
+mas_model$Reset()
+
+# Import MAS output
+mas_output <- jsonlite::read_json(file.path(data_dir, "mas_output.json"))
+
+```
