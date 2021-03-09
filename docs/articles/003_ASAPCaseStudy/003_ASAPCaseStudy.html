@@ -62,6 +62,9 @@
     <li>
       <a href="../../articles/003_ASAPCaseStudy/003_ASAPCaseStudy.html">ASAP Case Study</a>
     </li>
+    <li>
+      <a href="../../articles/004_SSCaseStudy/004_SSCaseStudy.html">SS Case Study</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -81,7 +84,7 @@
       <h1 data-toc-skip>ASAP Case Study</h1>
                         <h4 class="author">Christine Stawitz and Bai Li</h4>
             
-            <h4 class="date">Created on 08/05/2019; Updated on 03/03/2021</h4>
+            <h4 class="date">Created on 08/05/2019; Updated on 03/09/2021</h4>
       
       
       <div class="hidden name"><code>003_ASAPCaseStudy.Rmd</code></div>
@@ -252,7 +255,7 @@
 <span class="co"># Likelihood component settings</span>
 <span class="va">fleet_index_comp_nll</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">vector</a></span><span class="op">(</span>mode<span class="op">=</span><span class="st">"list"</span>, length<span class="op">=</span><span class="va">fleet_num</span><span class="op">)</span>
 <span class="va">fleet_age_comp_nll</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">vector</a></span><span class="op">(</span>mode<span class="op">=</span><span class="st">"list"</span>, length<span class="op">=</span><span class="va">fleet_num</span><span class="op">)</span>
-<span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">survey_num</span><span class="op">)</span><span class="op">{</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">fleet_num</span><span class="op">)</span><span class="op">{</span>
   <span class="va">fleet_index_comp_nll</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Lognormal</span><span class="op">)</span>
   <span class="va">fleet_index_comp_nll</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">use_bias_correction</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>
 
@@ -306,7 +309,7 @@
 <span class="co"># Create the fleet</span>
 <span class="va">fleet</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">vector</a></span><span class="op">(</span>mode<span class="op">=</span><span class="st">"list"</span>, length<span class="op">=</span><span class="va">fleet_num</span><span class="op">)</span>
 
-<span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">survey_num</span><span class="op">)</span><span class="op">{</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">fleet_num</span><span class="op">)</span><span class="op">{</span>
   <span class="va">fleet</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Fleet</span><span class="op">)</span>
   <span class="va">fleet</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">AddIndexData</span><span class="op">(</span><span class="va">catch_index</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">id</span>, <span class="st">"undifferentiated"</span><span class="op">)</span>
   <span class="va">fleet</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">AddAgeCompData</span><span class="op">(</span><span class="va">catch_comp</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">id</span>, <span class="st">"undifferentiated"</span><span class="op">)</span>
@@ -476,81 +479,81 @@
 
 <span class="va">parameter_table</span></code></pre></div>
 <pre><code>##                       Parameter     Value   Gradient
-## 1                           q_1  0.512568   0.200703
-## 2                      log_R0_1  9.015840  -4.575628
-## 3                            h1  0.976655 -74.457956
-## 4   recruitment_deviations[0]_1 -1.012834   0.165886
-## 5   recruitment_deviations[1]_1 -1.076250   0.124169
-## 6   recruitment_deviations[2]_1 -1.677936   0.054846
-## 7   recruitment_deviations[3]_1 -1.149112   0.073359
-## 8   recruitment_deviations[4]_1 -1.712305   0.017372
-## 9   recruitment_deviations[5]_1  0.358340  -0.046726
-## 10  recruitment_deviations[6]_1 -0.799155  -0.080413
-## 11  recruitment_deviations[7]_1 -1.226850  -0.120454
-## 12  recruitment_deviations[8]_1 -0.802107  -0.366992
-## 13  recruitment_deviations[9]_1 -2.027601  -0.201849
-## 14 recruitment_deviations[10]_1 -0.601827  -1.343052
-## 15 recruitment_deviations[11]_1 -1.095577  -1.006608
-## 16 recruitment_deviations[12]_1 -0.918321  -1.289407
-## 17 recruitment_deviations[13]_1 -1.050539  -1.087277
-## 18 recruitment_deviations[14]_1 -0.877550  -1.145010
-## 19 recruitment_deviations[15]_1 -1.755219  -0.418939
-## 20 recruitment_deviations[16]_1 -0.390512  -1.039677
-## 21 recruitment_deviations[17]_1 -1.341667  -0.169949
-## 22 recruitment_deviations[18]_1 -1.159704  -0.069581
-## 23 recruitment_deviations[19]_1 -2.158267  -0.019351
-## 24   logistic_selectivity_a50_2  9.410630   1.022085
-## 25 logistic_selectivity_slope_2  1.614018   0.218258
-## 26                               0.107262   3.135552
-## 27                               0.246722   1.914086
-## 28                               0.437741   0.800638
-## 29                               0.616965  -0.194362
-## 30                               0.671413  -2.157589
-## 31                               0.673214   2.089435
-## 32                               0.701600   3.662280
-## 33                               0.582900  -5.258766
-## 34                               0.656583   0.042069
-## 35                               0.754900  -3.495710
-## 36    fishing_mortality[1][0]_1  0.101953  -1.701241
-## 37    fishing_mortality[2][0]_1  0.143370   0.191288
-## 38    fishing_mortality[3][0]_1  0.177299  -0.545844
-## 39    fishing_mortality[4][0]_1  0.124101   0.627320
-## 40    fishing_mortality[0][0]_1  0.020753  -8.591903
-## 41   fishing_mortality[19][0]_1  0.061360 -27.659361
-## 42    fishing_mortality[7][0]_1  0.361685   0.315742
-## 43   fishing_mortality[11][0]_1  0.681158   1.271659
-## 44    fishing_mortality[6][0]_1  0.489321   0.230111
-## 45    fishing_mortality[5][0]_1  0.197031   0.612643
-## 46   fishing_mortality[13][0]_1  0.103051   1.084654
-## 47   fishing_mortality[15][0]_1  0.078355  -5.123608
-## 48   fishing_mortality[16][0]_1  0.071842 -10.827963
-## 49   fishing_mortality[10][0]_1  0.705212   0.916729
-## 50   fishing_mortality[18][0]_1  0.092509 -15.278557
-## 51    fishing_mortality[9][0]_1  0.538595   0.842170
-## 52   fishing_mortality[12][0]_1  0.543693   2.479806
-## 53    fishing_mortality[8][0]_1  0.478846   0.303473
-## 54   fishing_mortality[14][0]_1  0.135510   0.130430
-## 55   fishing_mortality[17][0]_1  0.030024 -42.711083
-## 56    f_initial_deviations[0]_1 -1.741327   0.505974
-## 57    f_initial_deviations[1]_1 -1.344776   1.504307
-## 58    f_initial_deviations[2]_1 -1.940433  -0.201664
-## 59    f_initial_deviations[3]_1 -1.236971  -0.750289
-## 60    f_initial_deviations[4]_1 -1.129694  -0.614008
-## 61    f_initial_deviations[5]_1 -1.195354   0.716212
-## 62    f_initial_deviations[6]_1 -2.760191   0.141658
-## 63    f_initial_deviations[7]_1 -0.694841   1.600305
-## 64    f_initial_deviations[8]_1 -1.707622  -0.161048
-## 65    f_initial_deviations[9]_1 -2.371536  -0.626742
-## 66    m_initial_deviations[0]_1 -1.741327   0.505974
-## 67    m_initial_deviations[1]_1 -1.344776   1.504307
-## 68    m_initial_deviations[2]_1 -1.940433  -0.201664
-## 69    m_initial_deviations[3]_1 -1.236971  -0.750289
-## 70    m_initial_deviations[4]_1 -1.129694  -0.614008
-## 71    m_initial_deviations[5]_1 -1.195354   0.716212
-## 72    m_initial_deviations[6]_1 -2.760191   0.141658
-## 73    m_initial_deviations[7]_1 -0.694841   1.600305
-## 74    m_initial_deviations[8]_1 -1.707622  -0.161048
-## 75    m_initial_deviations[9]_1 -2.371536  -0.626742</code></pre>
+## 1                           q_1  0.547963   1.111149
+## 2   recruitment_deviations[0]_1 -1.528650  -0.004271
+## 3   recruitment_deviations[1]_1 -0.939985   0.672885
+## 4   recruitment_deviations[2]_1 -1.543107   0.077810
+## 5   recruitment_deviations[3]_1 -1.007420   0.056366
+## 6   recruitment_deviations[4]_1 -1.549221   0.078153
+## 7   recruitment_deviations[5]_1  0.531231   1.154350
+## 8   recruitment_deviations[6]_1 -0.603635   1.358103
+## 9   recruitment_deviations[7]_1 -1.008848   1.389189
+## 10  recruitment_deviations[8]_1 -0.576368   2.985513
+## 11  recruitment_deviations[9]_1 -1.814390   0.994127
+## 12 recruitment_deviations[10]_1 -0.372356   3.500036
+## 13 recruitment_deviations[11]_1 -0.822661   1.732812
+## 14 recruitment_deviations[12]_1 -0.581224   1.785240
+## 15 recruitment_deviations[13]_1 -0.668864   1.220618
+## 16 recruitment_deviations[14]_1 -0.526723   0.859705
+## 17 recruitment_deviations[15]_1 -1.442066   0.435804
+## 18 recruitment_deviations[16]_1 -0.126079   0.139448
+## 19 recruitment_deviations[17]_1 -1.084101   0.135312
+## 20 recruitment_deviations[18]_1 -0.924831  -0.015879
+## 21 recruitment_deviations[19]_1 -2.015498  -0.296502
+## 22                     log_R0_1  8.973617  12.774967
+## 23                           h1  0.933282  69.051174
+## 24   logistic_selectivity_a50_2  9.493829   0.606889
+## 25 logistic_selectivity_slope_2  1.616847   1.071833
+## 26                               0.106597 -14.213740
+## 27                               0.245997  -3.274444
+## 28                               0.434716  -5.180276
+## 29                               0.614620  -0.647009
+## 30                               0.663313  -3.144303
+## 31                               0.673050   9.329430
+## 32                               0.679536  -1.180314
+## 33                               0.613538   6.849577
+## 34                               0.638760  -1.617182
+## 35                               0.776947  -2.918316
+## 36    fishing_mortality[1][0]_1  0.104286   1.041231
+## 37    fishing_mortality[2][0]_1  0.145147  -4.742228
+## 38    fishing_mortality[4][0]_1  0.125349  27.823466
+## 39    fishing_mortality[3][0]_1  0.179894  -1.256140
+## 40    fishing_mortality[0][0]_1  0.021006  41.377296
+## 41   fishing_mortality[17][0]_1  0.031067  71.848436
+## 42   fishing_mortality[11][0]_1  0.701157  -4.611693
+## 43   fishing_mortality[14][0]_1  0.140439   8.103161
+## 44   fishing_mortality[10][0]_1  0.716310   2.577684
+## 45    fishing_mortality[6][0]_1  0.492018   0.454870
+## 46    fishing_mortality[7][0]_1  0.365745 -11.136254
+## 47   fishing_mortality[13][0]_1  0.106595  13.232541
+## 48    fishing_mortality[8][0]_1  0.483384 -14.320447
+## 49   fishing_mortality[19][0]_1  0.063736  -1.587406
+## 50   fishing_mortality[15][0]_1  0.080972  24.031897
+## 51    fishing_mortality[5][0]_1  0.199513   1.375343
+## 52   fishing_mortality[18][0]_1  0.096375  18.687662
+## 53   fishing_mortality[12][0]_1  0.557218   0.051590
+## 54    fishing_mortality[9][0]_1  0.547688  -4.613690
+## 55   fishing_mortality[16][0]_1  0.074850  25.058808
+## 56    f_initial_deviations[0]_1 -1.733750  -1.124768
+## 57    f_initial_deviations[1]_1 -1.334069  -0.476822
+## 58    f_initial_deviations[2]_1 -1.879362   0.636274
+## 59    f_initial_deviations[3]_1 -1.181895   0.489621
+## 60    f_initial_deviations[4]_1 -1.061247   1.000051
+## 61    f_initial_deviations[5]_1 -1.133975   1.667689
+## 62    f_initial_deviations[6]_1 -2.766826  -0.004121
+## 63    f_initial_deviations[7]_1 -0.697495   1.137379
+## 64    f_initial_deviations[8]_1 -1.753966  -0.621217
+## 65    f_initial_deviations[9]_1 -2.458103  -1.274678
+## 66    m_initial_deviations[0]_1 -1.733750  -1.124768
+## 67    m_initial_deviations[1]_1 -1.334069  -0.476822
+## 68    m_initial_deviations[2]_1 -1.879362   0.636274
+## 69    m_initial_deviations[3]_1 -1.181895   0.489621
+## 70    m_initial_deviations[4]_1 -1.061247   1.000051
+## 71    m_initial_deviations[5]_1 -1.133975   1.667689
+## 72    m_initial_deviations[6]_1 -2.766826  -0.004121
+## 73    m_initial_deviations[7]_1 -0.697495   1.137379
+## 74    m_initial_deviations[8]_1 -1.753966  -0.621217
+## 75    m_initial_deviations[9]_1 -2.458103  -1.274678</code></pre>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">popdy</span><span class="op">&lt;-</span><span class="va">mas_output</span><span class="op">$</span><span class="va">population_dynamics</span>
 <span class="va">pop</span><span class="op">&lt;-</span><span class="va">popdy</span><span class="op">$</span><span class="va">populations</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
