@@ -84,7 +84,7 @@
       <h1 data-toc-skip>ASAP Case Study</h1>
                         <h4 class="author">Christine Stawitz and Bai Li</h4>
             
-            <h4 class="date">Created on 08/05/2019; Updated on 03/09/2021</h4>
+            <h4 class="date">Created on 08/05/2019; Updated on 03/10/2021</h4>
       
       
       <div class="hidden name"><code>003_ASAPCaseStudy.Rmd</code></div>
@@ -111,7 +111,20 @@
 <h2 class="hasAnchor">
 <a href="#read-asap-input-file" class="anchor"></a>Read ASAP input file</h2>
 <div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="st">"C:/Users/bai.li/Documents/Github/RMAS/vignettes/003_ASAPCaseStudy"</span>
+<code class="sourceCode R"><span class="co"># Download a .zip file of the repository </span>
+<span class="va">temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">url</span> <span class="op">&lt;-</span> <span class="st">"https://github.com/Bai-Li-NOAA/RMAS/archive/master.zip"</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/download.file.html">download.file</a></span><span class="op">(</span>
+  url <span class="op">=</span> <span class="st">"https://github.com/Bai-Li-NOAA/RMAS/archive/master.zip"</span>,
+  destfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">temp</span>, <span class="st">"RMAS-master.zip"</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># Unzip the .zip file</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/unzip.html">unzip</a></span><span class="op">(</span>zipfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">temp</span>, <span class="st">"RMAS-master.zip"</span><span class="op">)</span>, 
+      exdir <span class="op">=</span> <span class="va">temp</span><span class="op">)</span>
+
+<span class="co"># Read ASAP input data  </span>
+<span class="va">data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">temp</span>, <span class="st">"RMAS-master"</span>, <span class="st">"vignettes"</span>, <span class="st">"003_ASAPCaseStudy"</span><span class="op">)</span>
 <span class="va">asap_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ASAPplots/man/ReadASAP3DatFile.html">ReadASAP3DatFile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">data_dir</span>, <span class="st">"ASAPSimple.dat"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">dat</span></code></pre></div>
 <pre><code>## [1] "Hooray!  Test value at end of file is correct"</code></pre>
 </div>
@@ -162,7 +175,7 @@
 <span class="va">recruitment</span><span class="op">$</span><span class="va">deviations_min</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">15.0</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">deviations_max</span> <span class="op">&lt;-</span> <span class="fl">15.0</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">deviation_phase</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">asap_input</span><span class="op">$</span><span class="va">phase_rec_devs</span><span class="op">)</span>
-<span class="va">recruitment</span><span class="op">$</span><span class="fu">SetDeviations</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0.0</span>, times<span class="op">=</span><span class="va">nyears</span><span class="op">)</span><span class="op">)</span>
+<span class="va">recruitment</span><span class="op">$</span><span class="fu">SetDeviations</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0.1</span>, times<span class="op">=</span><span class="va">nyears</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># Growth settings</span>
 <span class="va">growth</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">VonBertalanffyModified</span><span class="op">)</span>
@@ -199,7 +212,7 @@
 <span class="va">growth</span><span class="op">$</span><span class="fu">SetUndifferentiatedCatchWeight</span><span class="op">(</span><span class="va">catch_empirical_weight</span><span class="op">)</span>
 <span class="va">growth</span><span class="op">$</span><span class="fu">SetUndifferentiatedWeightAtSeasonStart</span><span class="op">(</span><span class="va">jan1_empirical_weight</span><span class="op">)</span>
 <span class="va">growth</span><span class="op">$</span><span class="fu">SetUndifferentiatedWeightAtSpawning</span><span class="op">(</span><span class="va">ssb_empirical_weight</span><span class="op">)</span>
-<span class="va">growth</span><span class="op">$</span><span class="fu">SetUndifferentiatedSurveyWeight</span><span class="op">(</span><span class="va">survey_empirical_weight</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># How to set emprical weight-at-age for two surveys? One survey unit is biomass and the other survey unit is number. The data are stored in survey_empirical_weight list.</span>
+<span class="va">growth</span><span class="op">$</span><span class="fu">SetUndifferentiatedSurveyWeight</span><span class="op">(</span><span class="va">survey_empirical_weight</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># How to set empirical weight-at-age for two surveys? One survey unit is biomass and the other survey unit is number. The data are stored in survey_empirical_weight list.</span>
 
 <span class="co"># Maturity settings</span>
 <span class="va">maturity</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Maturity</span><span class="op">)</span>
@@ -217,14 +230,14 @@
 
 <span class="co"># Initial deviations</span>
 <span class="va">initial_deviations</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">InitialDeviations</span><span class="op">)</span>
-<span class="va">initial_deviations</span><span class="op">$</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, times<span class="op">=</span><span class="va">nages</span><span class="op">)</span>
+<span class="va">initial_deviations</span><span class="op">$</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0.1</span>, times<span class="op">=</span><span class="va">nages</span><span class="op">)</span>
 <span class="va">initial_deviations</span><span class="op">$</span><span class="va">estimate</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">asap_input</span><span class="op">$</span><span class="va">phase_N1_devs</span> <span class="op">&lt;</span> <span class="fl">0</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">initial_deviations</span><span class="op">$</span><span class="va">phase</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">asap_input</span><span class="op">$</span><span class="va">phase_N1_devs</span><span class="op">)</span>
 
 <span class="co"># Create population</span>
 <span class="va">population</span><span class="op">=</span><span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Population</span><span class="op">)</span>
-<span class="kw">for</span> <span class="op">(</span><span class="va">y</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">nyears</span><span class="op">)</span><span class="op">)</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">y</span> <span class="kw">in</span> <span class="fl">0</span><span class="op">:</span><span class="op">(</span><span class="va">nyears</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="op">{</span>
   <span class="va">population</span><span class="op">$</span><span class="fu">AddMovement</span><span class="op">(</span><span class="va">movement</span><span class="op">$</span><span class="va">id</span>, <span class="va">y</span><span class="op">)</span>
 <span class="op">}</span>
@@ -479,81 +492,81 @@
 
 <span class="va">parameter_table</span></code></pre></div>
 <pre><code>##                       Parameter     Value   Gradient
-## 1                           q_1  0.547963   1.111149
-## 2   recruitment_deviations[0]_1 -1.528650  -0.004271
-## 3   recruitment_deviations[1]_1 -0.939985   0.672885
-## 4   recruitment_deviations[2]_1 -1.543107   0.077810
-## 5   recruitment_deviations[3]_1 -1.007420   0.056366
-## 6   recruitment_deviations[4]_1 -1.549221   0.078153
-## 7   recruitment_deviations[5]_1  0.531231   1.154350
-## 8   recruitment_deviations[6]_1 -0.603635   1.358103
-## 9   recruitment_deviations[7]_1 -1.008848   1.389189
-## 10  recruitment_deviations[8]_1 -0.576368   2.985513
-## 11  recruitment_deviations[9]_1 -1.814390   0.994127
-## 12 recruitment_deviations[10]_1 -0.372356   3.500036
-## 13 recruitment_deviations[11]_1 -0.822661   1.732812
-## 14 recruitment_deviations[12]_1 -0.581224   1.785240
-## 15 recruitment_deviations[13]_1 -0.668864   1.220618
-## 16 recruitment_deviations[14]_1 -0.526723   0.859705
-## 17 recruitment_deviations[15]_1 -1.442066   0.435804
-## 18 recruitment_deviations[16]_1 -0.126079   0.139448
-## 19 recruitment_deviations[17]_1 -1.084101   0.135312
-## 20 recruitment_deviations[18]_1 -0.924831  -0.015879
-## 21 recruitment_deviations[19]_1 -2.015498  -0.296502
-## 22                     log_R0_1  8.973617  12.774967
-## 23                           h1  0.933282  69.051174
-## 24   logistic_selectivity_a50_2  9.493829   0.606889
-## 25 logistic_selectivity_slope_2  1.616847   1.071833
-## 26                               0.106597 -14.213740
-## 27                               0.245997  -3.274444
-## 28                               0.434716  -5.180276
-## 29                               0.614620  -0.647009
-## 30                               0.663313  -3.144303
-## 31                               0.673050   9.329430
-## 32                               0.679536  -1.180314
-## 33                               0.613538   6.849577
-## 34                               0.638760  -1.617182
-## 35                               0.776947  -2.918316
-## 36    fishing_mortality[1][0]_1  0.104286   1.041231
-## 37    fishing_mortality[2][0]_1  0.145147  -4.742228
-## 38    fishing_mortality[4][0]_1  0.125349  27.823466
-## 39    fishing_mortality[3][0]_1  0.179894  -1.256140
-## 40    fishing_mortality[0][0]_1  0.021006  41.377296
-## 41   fishing_mortality[17][0]_1  0.031067  71.848436
-## 42   fishing_mortality[11][0]_1  0.701157  -4.611693
-## 43   fishing_mortality[14][0]_1  0.140439   8.103161
-## 44   fishing_mortality[10][0]_1  0.716310   2.577684
-## 45    fishing_mortality[6][0]_1  0.492018   0.454870
-## 46    fishing_mortality[7][0]_1  0.365745 -11.136254
-## 47   fishing_mortality[13][0]_1  0.106595  13.232541
-## 48    fishing_mortality[8][0]_1  0.483384 -14.320447
-## 49   fishing_mortality[19][0]_1  0.063736  -1.587406
-## 50   fishing_mortality[15][0]_1  0.080972  24.031897
-## 51    fishing_mortality[5][0]_1  0.199513   1.375343
-## 52   fishing_mortality[18][0]_1  0.096375  18.687662
-## 53   fishing_mortality[12][0]_1  0.557218   0.051590
-## 54    fishing_mortality[9][0]_1  0.547688  -4.613690
-## 55   fishing_mortality[16][0]_1  0.074850  25.058808
-## 56    f_initial_deviations[0]_1 -1.733750  -1.124768
-## 57    f_initial_deviations[1]_1 -1.334069  -0.476822
-## 58    f_initial_deviations[2]_1 -1.879362   0.636274
-## 59    f_initial_deviations[3]_1 -1.181895   0.489621
-## 60    f_initial_deviations[4]_1 -1.061247   1.000051
-## 61    f_initial_deviations[5]_1 -1.133975   1.667689
-## 62    f_initial_deviations[6]_1 -2.766826  -0.004121
-## 63    f_initial_deviations[7]_1 -0.697495   1.137379
-## 64    f_initial_deviations[8]_1 -1.753966  -0.621217
-## 65    f_initial_deviations[9]_1 -2.458103  -1.274678
-## 66    m_initial_deviations[0]_1 -1.733750  -1.124768
-## 67    m_initial_deviations[1]_1 -1.334069  -0.476822
-## 68    m_initial_deviations[2]_1 -1.879362   0.636274
-## 69    m_initial_deviations[3]_1 -1.181895   0.489621
-## 70    m_initial_deviations[4]_1 -1.061247   1.000051
-## 71    m_initial_deviations[5]_1 -1.133975   1.667689
-## 72    m_initial_deviations[6]_1 -2.766826  -0.004121
-## 73    m_initial_deviations[7]_1 -0.697495   1.137379
-## 74    m_initial_deviations[8]_1 -1.753966  -0.621217
-## 75    m_initial_deviations[9]_1 -2.458103  -1.274678</code></pre>
+## 1                           q_1  0.543587   0.420850
+## 2                      log_R0_1  8.749295  30.210236
+## 3                            h1  0.940693 149.547499
+## 4   recruitment_deviations[0]_1 -1.291082   0.074098
+## 5   recruitment_deviations[1]_1 -0.765542   0.019208
+## 6   recruitment_deviations[2]_1 -1.367901   0.002793
+## 7   recruitment_deviations[3]_1 -0.838041   0.062099
+## 8   recruitment_deviations[4]_1 -1.386846   0.299806
+## 9   recruitment_deviations[5]_1  0.688251   3.516052
+## 10  recruitment_deviations[6]_1 -0.458708   1.549433
+## 11  recruitment_deviations[7]_1 -0.872899   1.612880
+## 12  recruitment_deviations[8]_1 -0.447381   3.597338
+## 13  recruitment_deviations[9]_1 -1.684042   1.509075
+## 14 recruitment_deviations[10]_1 -0.248216   8.539617
+## 15 recruitment_deviations[11]_1 -0.719083   4.988768
+## 16 recruitment_deviations[12]_1 -0.502932   4.777011
+## 17 recruitment_deviations[13]_1 -0.604989   2.919530
+## 18 recruitment_deviations[14]_1 -0.450742   2.326364
+## 19 recruitment_deviations[15]_1 -1.360783   0.440393
+## 20 recruitment_deviations[16]_1 -0.021346   1.376222
+## 21 recruitment_deviations[17]_1 -0.984699   0.104766
+## 22 recruitment_deviations[18]_1 -0.813376   0.126588
+## 23 recruitment_deviations[19]_1 -1.839940   0.035205
+## 24   logistic_selectivity_a50_2  9.443432   0.805012
+## 25 logistic_selectivity_slope_2  1.608370  -0.015496
+## 26                               0.108201 -16.140553
+## 27                               0.248494 -10.233530
+## 28                               0.440614  -2.394381
+## 29                               0.619933   2.265158
+## 30                               0.673348  -0.396651
+## 31                               0.676574   4.354857
+## 32                               0.690410   0.735045
+## 33                               0.617051   5.448929
+## 34                               0.646562  -0.986597
+## 35                               0.791651  -0.510648
+## 36    fishing_mortality[4][0]_1  0.123115   3.361633
+## 37    fishing_mortality[0][0]_1  0.020672 -31.032228
+## 38    fishing_mortality[1][0]_1  0.102452  -2.984521
+## 39    fishing_mortality[2][0]_1  0.142494   3.195855
+## 40    fishing_mortality[3][0]_1  0.176539  -3.404735
+## 41   fishing_mortality[10][0]_1  0.715563  -9.850213
+## 42    fishing_mortality[9][0]_1  0.543435  -8.112308
+## 43   fishing_mortality[19][0]_1  0.064635  17.635460
+## 44   fishing_mortality[18][0]_1  0.097634  22.999076
+## 45    fishing_mortality[8][0]_1  0.479478  -7.270683
+## 46   fishing_mortality[12][0]_1  0.563801  -1.495553
+## 47   fishing_mortality[14][0]_1  0.142373  42.753155
+## 48    fishing_mortality[7][0]_1  0.360919  -6.358721
+## 49   fishing_mortality[11][0]_1  0.704423  -6.561505
+## 50   fishing_mortality[17][0]_1  0.031515  87.839887
+## 51    fishing_mortality[5][0]_1  0.195908  -2.075972
+## 52   fishing_mortality[15][0]_1  0.082242  60.006532
+## 53   fishing_mortality[16][0]_1  0.075884  63.643078
+## 54   fishing_mortality[13][0]_1  0.108304  45.384825
+## 55    fishing_mortality[6][0]_1  0.484410  -3.267526
+## 56    f_initial_deviations[0]_1 -1.496581  -0.531105
+## 57    f_initial_deviations[1]_1 -1.098005   0.247387
+## 58    f_initial_deviations[2]_1 -1.655530   0.551922
+## 59    f_initial_deviations[3]_1 -0.957735   0.277334
+## 60    f_initial_deviations[4]_1 -0.838979   0.784318
+## 61    f_initial_deviations[5]_1 -0.910754   1.519544
+## 62    f_initial_deviations[6]_1 -2.528493   0.051069
+## 63    f_initial_deviations[7]_1 -0.465638   1.438453
+## 64    f_initial_deviations[8]_1 -1.508713  -0.450098
+## 65    f_initial_deviations[9]_1 -2.208077  -0.989388
+## 66    m_initial_deviations[0]_1 -1.496581  -0.531105
+## 67    m_initial_deviations[1]_1 -1.098005   0.247387
+## 68    m_initial_deviations[2]_1 -1.655530   0.551922
+## 69    m_initial_deviations[3]_1 -0.957735   0.277334
+## 70    m_initial_deviations[4]_1 -0.838979   0.784318
+## 71    m_initial_deviations[5]_1 -0.910754   1.519544
+## 72    m_initial_deviations[6]_1 -2.528493   0.051069
+## 73    m_initial_deviations[7]_1 -0.465638   1.438453
+## 74    m_initial_deviations[8]_1 -1.508713  -0.450098
+## 75    m_initial_deviations[9]_1 -2.208077  -0.989388</code></pre>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">popdy</span><span class="op">&lt;-</span><span class="va">mas_output</span><span class="op">$</span><span class="va">population_dynamics</span>
 <span class="va">pop</span><span class="op">&lt;-</span><span class="va">popdy</span><span class="op">$</span><span class="va">populations</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
@@ -582,7 +595,7 @@
 <div id="generate-comparison-figures" class="section level2">
 <h2 class="hasAnchor">
 <a href="#generate-comparison-figures" class="anchor"></a>Generate comparison figures</h2>
-<p>Compare temporal trends of biomass(B), abundance(A), spawning stock biomass (SSB), recruit (R), fishinig mortality (F), Landings (L), and Survey index (SI) from <code>ASAP</code> (dots) and <code>MAS</code> (lines).</p>
+<p>Compare temporal trends of biomass(B), abundance(A), spawning stock biomass (SSB), recruit (R), fishing mortality (F), Landings (L), and Survey index (SI) from <code>ASAP</code> (dots) and <code>MAS</code> (lines).</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">years</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">asap_output</span><span class="op">$</span><span class="va">N.age</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span>
@@ -649,7 +662,7 @@
 <li><p>How is sex ratio used in MAS? ASAP doesn't distinguish males and females. ASAP multiplies maturity-at-age with sex ratio to get female spawning stock biomass. In this example, ASAP doesn't use sex ratio and R stops working when population$sex_ratio equals 1 in RMAS.</p></li>
 <li><p>For age-based selectivity, can you estimate it for some ages and fix it for some ages?</p></li>
 <li><p>How to link <code>r4mas$FishingMortality</code> with fleet (e.g., <code>fleet$AddFishingMortality</code>) when there are more than 1 fleet?</p></li>
-<li><p>Include parameter names for age-based selectivity in RMAS ouputs?</p></li>
+<li><p>Include parameter names for age-based selectivity in RMAS outputs?</p></li>
 </ul>
 </div>
 <div id="potential-causes-of-differences-between-asap-and-mas-estimates" class="section level3">
@@ -657,7 +670,7 @@
 <a href="#potential-causes-of-differences-between-asap-and-mas-estimates" class="anchor"></a>Potential causes of differences between ASAP and MAS estimates</h3>
 <ul>
 <li><p>ASAP uses data from two surveys but MAS only uses data from survey 1 at the current stage.</p></li>
-<li><p>Selectivity of fleet is age-based selectivity. In ASAP, the selectivities from age 7-10 are fixed at 1. In MAS, the selectivities from age 1-10 are estimated.</p></li>
+<li><p>Selectivity of fleet is age-based selectivity. In ASAP, the selectivity from age 7-10 is fixed at 1. In MAS, the selectivity from age 1-10 is estimated.</p></li>
 </ul>
 </div>
 </div>
