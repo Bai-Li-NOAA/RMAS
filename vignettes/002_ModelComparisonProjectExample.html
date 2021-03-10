@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2021-03-03" />
+<meta name="date" content="2021-03-10" />
 
 <title>Model Comparison Project Example</title>
 
@@ -188,7 +188,7 @@ summary {
 
 
 <h1 class="title toc-ignore">Model Comparison Project Example</h1>
-<h4 class="date">03/03/2021</h4>
+<h4 class="date">03/10/2021</h4>
 
 </div>
 
@@ -335,7 +335,7 @@ recruitment$constrained_deviations &lt;- TRUE
 recruitment$deviations_min &lt;- -15.0
 recruitment$deviations_max &lt;- 15.0
 recruitment$deviation_phase &lt;- 2
-recruitment$SetDeviations(rep(0.0, times=om_input$nyr))</code></pre>
+recruitment$SetDeviations(rep(0.1, times=om_input$nyr))</code></pre>
 </div>
 <div id="growth-settings" class="section level3">
 <h3>Growth settings</h3>
@@ -381,14 +381,14 @@ movement$connectivity_recruits &lt;- c(1.0)</code></pre>
 <div id="initial-deviation-settings" class="section level3">
 <h3>Initial deviation settings</h3>
 <pre class="r"><code>initial_deviations &lt;- new(r4mas$InitialDeviations)
-initial_deviations$values &lt;- rep(0, times=om_input$nages)
+initial_deviations$values &lt;- rep(0.1, times=om_input$nages)
 initial_deviations$estimate &lt;- TRUE
 initial_deviations$phase &lt;- 2</code></pre>
 </div>
 <div id="creat-the-population" class="section level3">
 <h3>Creat the population</h3>
 <pre class="r"><code>population=new(r4mas$Population)
-for (y in 0:(nyears))
+for (y in 0:(nyears-1))
 {
   population$AddMovement(movement$id, y)
 }
@@ -545,96 +545,96 @@ parameter_table$Gradient &lt;- round(as.numeric(parameter_table$Gradient),
 
 parameter_table</code></pre>
 <pre><code>##                       Parameter     Value  Gradient
-## 1                           q_1  0.000342 -0.029337
-## 2                      log_R0_1  9.286433 -0.000570
-## 3   recruitment_deviations[0]_1 -0.745912  0.000000
-## 4   recruitment_deviations[1]_1 -0.762434 -0.000036
-## 5   recruitment_deviations[2]_1 -1.136047 -0.000025
-## 6   recruitment_deviations[3]_1 -1.147227 -0.000025
-## 7   recruitment_deviations[4]_1 -0.740477 -0.000039
-## 8   recruitment_deviations[5]_1 -0.680961 -0.000042
-## 9   recruitment_deviations[6]_1 -1.013715 -0.000031
-## 10  recruitment_deviations[7]_1 -0.767016 -0.000038
-## 11  recruitment_deviations[8]_1 -0.979244 -0.000032
-## 12  recruitment_deviations[9]_1 -0.793149 -0.000038
-## 13 recruitment_deviations[10]_1 -0.774212 -0.000039
-## 14 recruitment_deviations[11]_1 -0.815487 -0.000036
-## 15 recruitment_deviations[12]_1 -0.957238 -0.000030
-## 16 recruitment_deviations[13]_1 -0.762414 -0.000035
-## 17 recruitment_deviations[14]_1 -0.878091 -0.000031
-## 18 recruitment_deviations[15]_1 -0.615657 -0.000042
-## 19 recruitment_deviations[16]_1 -0.601673 -0.000043
-## 20 recruitment_deviations[17]_1 -0.943181 -0.000031
-## 21 recruitment_deviations[18]_1 -0.683105 -0.000036
-## 22 recruitment_deviations[19]_1 -0.886000 -0.000028
-## 23 recruitment_deviations[20]_1 -0.290317 -0.000044
-## 24 recruitment_deviations[21]_1 -0.284609 -0.000041
-## 25 recruitment_deviations[22]_1 -0.540647 -0.000027
-## 26 recruitment_deviations[23]_1 -0.546004 -0.000025
-## 27 recruitment_deviations[24]_1 -0.272757 -0.000027
-## 28 recruitment_deviations[25]_1 -0.517425 -0.000017
-## 29 recruitment_deviations[26]_1 -0.323458 -0.000014
-## 30 recruitment_deviations[27]_1 -0.026979 -0.000012
-## 31 recruitment_deviations[28]_1  0.009443 -0.000005
-## 32 recruitment_deviations[29]_1 -0.219965 -0.000001
-## 33   logistic_selectivity_a50_2  1.435461  0.000003
-## 34 logistic_selectivity_slope_2  0.530856  0.000000
-## 35   logistic_selectivity_a50_1  2.093840 -0.000069
-## 36 logistic_selectivity_slope_1  1.075880 -0.000002
-## 37    fishing_mortality[0][0]_1  0.009301 -0.001966
-## 38    fishing_mortality[2][0]_1  0.045016 -0.000091
-## 39    fishing_mortality[3][0]_1  0.061289 -0.000009
-## 40    fishing_mortality[5][0]_1  0.088120  0.000042
-## 41    fishing_mortality[6][0]_1  0.087911  0.000047
-## 42    fishing_mortality[8][0]_1  0.109048  0.000078
-## 43    fishing_mortality[1][0]_1  0.027012 -0.000327
-## 44    fishing_mortality[4][0]_1  0.048619 -0.000083
-## 45    fishing_mortality[7][0]_1  0.185642  0.000124
-## 46   fishing_mortality[11][0]_1  0.160845  0.000062
-## 47   fishing_mortality[22][0]_1  0.437979  0.000065
-## 48   fishing_mortality[23][0]_1  0.366796  0.000038
-## 49   fishing_mortality[17][0]_1  0.260518  0.000100
-## 50   fishing_mortality[25][0]_1  0.339934  0.000023
-## 51    fishing_mortality[9][0]_1  0.132404  0.000082
-## 52   fishing_mortality[26][0]_1  0.336377 -0.000040
-## 53   fishing_mortality[24][0]_1  0.367877  0.000021
-## 54   fishing_mortality[27][0]_1  0.477834  0.000000
-## 55   fishing_mortality[15][0]_1  0.160929  0.000055
-## 56   fishing_mortality[19][0]_1  0.260898  0.000054
-## 57   fishing_mortality[21][0]_1  0.265918  0.000058
-## 58   fishing_mortality[20][0]_1  0.361513  0.000061
-## 59   fishing_mortality[29][0]_1  0.574211 -0.000043
-## 60   fishing_mortality[14][0]_1  0.180522  0.000081
-## 61   fishing_mortality[28][0]_1  0.368980 -0.000054
-## 62   fishing_mortality[13][0]_1  0.167765  0.000063
-## 63   fishing_mortality[18][0]_1  0.260752  0.000133
-## 64   fishing_mortality[16][0]_1  0.317002  0.000124
-## 65   fishing_mortality[10][0]_1  0.150010  0.000091
-## 66   fishing_mortality[12][0]_1  0.116203  0.000056
-## 67    f_initial_deviations[0]_1 -1.674474 -0.000014
-## 68    f_initial_deviations[1]_1 -1.769343 -0.000013
-## 69    f_initial_deviations[2]_1 -1.729513 -0.000012
-## 70    f_initial_deviations[3]_1 -1.696082 -0.000013
-## 71    f_initial_deviations[4]_1 -1.712506 -0.000012
-## 72    f_initial_deviations[5]_1 -1.673083 -0.000011
-## 73    f_initial_deviations[6]_1 -1.469955 -0.000012
-## 74    f_initial_deviations[7]_1 -1.818995 -0.000008
-## 75    f_initial_deviations[8]_1 -1.536046 -0.000009
-## 76    f_initial_deviations[9]_1 -1.938069 -0.000005
-## 77   f_initial_deviations[10]_1 -1.620425 -0.000005
-## 78   f_initial_deviations[11]_1 -1.855322 -0.000020
-## 79    m_initial_deviations[0]_1 -1.674474 -0.000014
-## 80    m_initial_deviations[1]_1 -1.769343 -0.000013
-## 81    m_initial_deviations[2]_1 -1.729513 -0.000012
-## 82    m_initial_deviations[3]_1 -1.696082 -0.000013
-## 83    m_initial_deviations[4]_1 -1.712506 -0.000012
-## 84    m_initial_deviations[5]_1 -1.673083 -0.000011
-## 85    m_initial_deviations[6]_1 -1.469955 -0.000012
-## 86    m_initial_deviations[7]_1 -1.818995 -0.000008
-## 87    m_initial_deviations[8]_1 -1.536046 -0.000009
-## 88    m_initial_deviations[9]_1 -1.938069 -0.000005
-## 89   m_initial_deviations[10]_1 -1.620425 -0.000005
-## 90   m_initial_deviations[11]_1 -1.855322 -0.000020</code></pre>
+## 1                           q_1  0.000342 -0.022708
+## 2   recruitment_deviations[0]_1 -0.745912  0.000000
+## 3   recruitment_deviations[1]_1 -0.762434 -0.000022
+## 4   recruitment_deviations[2]_1 -1.136047 -0.000015
+## 5   recruitment_deviations[3]_1 -1.147227 -0.000017
+## 6   recruitment_deviations[4]_1 -0.740477 -0.000027
+## 7   recruitment_deviations[5]_1 -0.680961 -0.000028
+## 8   recruitment_deviations[6]_1 -1.013715 -0.000021
+## 9   recruitment_deviations[7]_1 -0.767016 -0.000027
+## 10  recruitment_deviations[8]_1 -0.979244 -0.000024
+## 11  recruitment_deviations[9]_1 -0.793149 -0.000027
+## 12 recruitment_deviations[10]_1 -0.774212 -0.000029
+## 13 recruitment_deviations[11]_1 -0.815487 -0.000025
+## 14 recruitment_deviations[12]_1 -0.957238 -0.000021
+## 15 recruitment_deviations[13]_1 -0.762414 -0.000025
+## 16 recruitment_deviations[14]_1 -0.878091 -0.000022
+## 17 recruitment_deviations[15]_1 -0.615657 -0.000027
+## 18 recruitment_deviations[16]_1 -0.601673 -0.000031
+## 19 recruitment_deviations[17]_1 -0.943181 -0.000021
+## 20 recruitment_deviations[18]_1 -0.683105 -0.000024
+## 21 recruitment_deviations[19]_1 -0.886000 -0.000017
+## 22 recruitment_deviations[20]_1 -0.290317 -0.000030
+## 23 recruitment_deviations[21]_1 -0.284609 -0.000027
+## 24 recruitment_deviations[22]_1 -0.540647 -0.000019
+## 25 recruitment_deviations[23]_1 -0.546004 -0.000018
+## 26 recruitment_deviations[24]_1 -0.272757 -0.000020
+## 27 recruitment_deviations[25]_1 -0.517425 -0.000012
+## 28 recruitment_deviations[26]_1 -0.323458 -0.000011
+## 29 recruitment_deviations[27]_1 -0.026979 -0.000008
+## 30 recruitment_deviations[28]_1  0.009443 -0.000005
+## 31 recruitment_deviations[29]_1 -0.219965 -0.000001
+## 32                     log_R0_1  9.286433 -0.000353
+## 33   logistic_selectivity_a50_2  1.435461  0.000002
+## 34 logistic_selectivity_slope_2  0.530856  0.000001
+## 35   logistic_selectivity_a50_1  2.093840 -0.000050
+## 36 logistic_selectivity_slope_1  1.075880 -0.000003
+## 37    fishing_mortality[0][0]_1  0.009301 -0.000626
+## 38    fishing_mortality[2][0]_1  0.045016  0.000047
+## 39    fishing_mortality[5][0]_1  0.088120  0.000123
+## 40    fishing_mortality[6][0]_1  0.087911  0.000052
+## 41    fishing_mortality[1][0]_1  0.027012  0.000064
+## 42    fishing_mortality[3][0]_1  0.061289  0.000043
+## 43    fishing_mortality[7][0]_1  0.185642  0.000106
+## 44    fishing_mortality[8][0]_1  0.109048  0.000063
+## 45    fishing_mortality[4][0]_1  0.048619  0.000024
+## 46   fishing_mortality[22][0]_1  0.437979  0.000037
+## 47   fishing_mortality[24][0]_1  0.367877  0.000046
+## 48    fishing_mortality[9][0]_1  0.132404  0.000061
+## 49   fishing_mortality[10][0]_1  0.150010  0.000061
+## 50   fishing_mortality[19][0]_1  0.260898  0.000044
+## 51   fishing_mortality[26][0]_1  0.336377  0.000005
+## 52   fishing_mortality[13][0]_1  0.167765  0.000040
+## 53   fishing_mortality[29][0]_1  0.574211 -0.000036
+## 54   fishing_mortality[11][0]_1  0.160845  0.000075
+## 55   fishing_mortality[27][0]_1  0.477834 -0.000026
+## 56   fishing_mortality[20][0]_1  0.361513  0.000056
+## 57   fishing_mortality[12][0]_1  0.116203  0.000006
+## 58   fishing_mortality[16][0]_1  0.317002  0.000070
+## 59   fishing_mortality[14][0]_1  0.180522  0.000054
+## 60   fishing_mortality[18][0]_1  0.260752  0.000067
+## 61   fishing_mortality[25][0]_1  0.339934  0.000009
+## 62   fishing_mortality[28][0]_1  0.368980 -0.000021
+## 63   fishing_mortality[23][0]_1  0.366796  0.000014
+## 64   fishing_mortality[15][0]_1  0.160929  0.000043
+## 65   fishing_mortality[17][0]_1  0.260518  0.000082
+## 66   fishing_mortality[21][0]_1  0.265918  0.000036
+## 67    f_initial_deviations[0]_1 -1.674474 -0.000009
+## 68    f_initial_deviations[1]_1 -1.769343 -0.000008
+## 69    f_initial_deviations[2]_1 -1.729513 -0.000007
+## 70    f_initial_deviations[3]_1 -1.696082 -0.000007
+## 71    f_initial_deviations[4]_1 -1.712506 -0.000007
+## 72    f_initial_deviations[5]_1 -1.673083 -0.000005
+## 73    f_initial_deviations[6]_1 -1.469955 -0.000006
+## 74    f_initial_deviations[7]_1 -1.818995 -0.000004
+## 75    f_initial_deviations[8]_1 -1.536046 -0.000004
+## 76    f_initial_deviations[9]_1 -1.938069 -0.000003
+## 77   f_initial_deviations[10]_1 -1.620425 -0.000003
+## 78   f_initial_deviations[11]_1 -1.855322 -0.000010
+## 79    m_initial_deviations[0]_1 -1.674474 -0.000009
+## 80    m_initial_deviations[1]_1 -1.769343 -0.000008
+## 81    m_initial_deviations[2]_1 -1.729513 -0.000007
+## 82    m_initial_deviations[3]_1 -1.696082 -0.000007
+## 83    m_initial_deviations[4]_1 -1.712506 -0.000007
+## 84    m_initial_deviations[5]_1 -1.673083 -0.000005
+## 85    m_initial_deviations[6]_1 -1.469955 -0.000006
+## 86    m_initial_deviations[7]_1 -1.818995 -0.000004
+## 87    m_initial_deviations[8]_1 -1.536046 -0.000004
+## 88    m_initial_deviations[9]_1 -1.938069 -0.000003
+## 89   m_initial_deviations[10]_1 -1.620425 -0.000003
+## 90   m_initial_deviations[11]_1 -1.855322 -0.000010</code></pre>
 </div>
 </div>
 <div id="compare-estimates-from-the-mas-with-true-values-from-the-om" class="section level2">
@@ -694,7 +694,7 @@ mas$selexparm_survey &lt;- list(a50=parameter_table$Value[parameter_table$Parame
 </div>
 <div id="generate-comparison-figures" class="section level3">
 <h3>Generate comparison figures</h3>
-<p>Compare temporal trends of biomass(B), abundance(A), spawning stock biomass (SSB), recruit (R), fishinig mortality (F), Landings (L), and Survey index (SI) from the OM (dots) and <code>MAS</code> (lines).</p>
+<p>Compare temporal trends of biomass(B), abundance(A), spawning stock biomass (SSB), recruit (R), fishing mortality (F), Landings (L), and Survey index (SI) from the OM (dots) and <code>MAS</code> (lines).</p>
 <pre class="r"><code>par(mfrow=c(4, 2), mar=c(3, 3, 0, 0))
 var &lt;- c(&quot;biomass&quot;, &quot;abundance&quot;, &quot;ssb&quot;, &quot;recruit&quot;, &quot;f&quot;, 
          &quot;landing&quot;, &quot;survey&quot;)
@@ -747,7 +747,7 @@ legend(&quot;topright&quot;,
 </div>
 <div id="generate-comparison-table" class="section level3">
 <h3>Generate comparison table</h3>
-<p>Compare estimated R0, q, and selectivity parameters. The etimated selectivity slope values from the <code>MAS</code> were converted using 1/slope to match the slope from the OM.</p>
+<p>Compare estimated R0, q, and selectivity parameters. The estimated selectivity slope values from the <code>MAS</code> were converted using 1/slope to match the slope from the OM.</p>
 <pre class="r"><code>var &lt;- c(&quot;R0&quot;, &quot;q&quot;, &quot;selexparm_fleet&quot;, &quot;selexparm_survey&quot;)
 summary_table &lt;- matrix(c(om$r0, mas$r0, 
                    om$q$survey1, mas$q[[1]],

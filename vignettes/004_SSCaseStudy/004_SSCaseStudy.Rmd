@@ -23,8 +23,21 @@ library(r4ss)
 
 ## Read SS input file
 ```{r}
+# Download a .zip file of the repository 
+temp <- tempdir()
+url <- "https://github.com/Bai-Li-NOAA/RMAS/archive/master.zip"
+download.file(
+  url = "https://github.com/Bai-Li-NOAA/RMAS/archive/master.zip",
+  destfile = file.path(temp, "RMAS-master.zip")
+)
 
-data_dir <- "C:/Users/bai.li/Documents/Github/RMAS/vignettes/004_SSCaseStudy"
+# Unzip the .zip file
+unzip(zipfile = file.path(temp, "RMAS-master.zip"), 
+      exdir = temp)
+
+# Read ASAP input data  
+data_dir <- file.path(temp, "RMAS-master", "vignettes", "004_SSCaseStudy")
+
 ss_dat <- SS_readdat_3.30(file = file.path(data_dir, "data.ss"),
                           verbose = FALSE)
 
@@ -116,7 +129,7 @@ recruitment$constrained_deviations <- TRUE
 recruitment$deviations_min <- -15.0
 recruitment$deviations_max <- 15.0
 recruitment$deviation_phase <- abs(ss_ctl$recdev_phase)
-recruitment$SetDeviations(rep(0.0, times=nyears))
+recruitment$SetDeviations(rep(0.1, times=nyears))
 
 # Growth settings
 fleet_num <- length(fleet_id)
@@ -184,7 +197,7 @@ growth$SetMaleWeightAtSeasonStart(jan1_waa[[2]])
 growth$SetFemaleWeightAtSpawning(ssb_waa[[1]])
 growth$SetMaleWeightAtSpawning(ssb_waa[[2]])
 growth$SetFemaleSurveyWeight(survey_waa[[1]][[1]])
-growth$SetMaleSurveyWeight(survey_waa[[1]][[2]]) # How to set emprical weight-at-age for two surveys? One survey unit is biomass and the other survey unit is number. The data are stored in survey_empirical_weight list.
+growth$SetMaleSurveyWeight(survey_waa[[1]][[2]]) # How to set empirical weight-at-age for two surveys? One survey unit is biomass and the other survey unit is number. The data are stored in survey_empirical_weight list.
 
 # Maturity settings
 show(r4mas$Maturity)
@@ -229,14 +242,14 @@ initial_deviations <- vector(mode="list", length=ngenders)
 
 for (j in 1:ngenders){
   initial_deviations[[j]] <- new(r4mas$InitialDeviations)
-  initial_deviations[[j]]$values <- rep(0, times=nages)
+  initial_deviations[[j]]$values <- rep(0.1, times=nages)
   initial_deviations[[j]]$estimate <- TRUE # Is it true in SS?
   initial_deviations[[j]]$phase <- 2
 }
 
 # Create population
 population=new(r4mas$Population)
-for (y in 1:(nyears))
+for (y in 0:(nyears-1))
 {
   population$AddMovement(movement$id, y)
 }

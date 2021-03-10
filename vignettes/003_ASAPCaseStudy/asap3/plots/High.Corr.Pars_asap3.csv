@@ -1,0 +1,6 @@
+"Par1","Par2","Correlation"
+"log_recruit_devs.1999","log_recruit_devs.1998",0.9043
+"log_recruit_devs.2000","log_recruit_devs.1999",0.9295
+"log_SR_scaler","log_recruit_devs.1991",-0.933
+"SR_steepness","log_recruit_devs.1999",-0.9482
+"SR_steepness","log_recruit_devs.2000",-0.9291

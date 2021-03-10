@@ -23,8 +23,20 @@ library(ASAPplots)
 
 ## Read ASAP input file
 ```{r}
+# Download a .zip file of the repository 
+temp <- tempdir()
+url <- "https://github.com/Bai-Li-NOAA/RMAS/archive/master.zip"
+download.file(
+  url = "https://github.com/Bai-Li-NOAA/RMAS/archive/master.zip",
+  destfile = file.path(temp, "RMAS-master.zip")
+)
 
-data_dir <- "C:/Users/bai.li/Documents/Github/RMAS/vignettes/003_ASAPCaseStudy"
+# Unzip the .zip file
+unzip(zipfile = file.path(temp, "RMAS-master.zip"), 
+      exdir = temp)
+
+# Read ASAP input data  
+data_dir <- file.path(temp, "RMAS-master", "vignettes", "003_ASAPCaseStudy")
 asap_input <- ReadASAP3DatFile(file.path(data_dir, "ASAPSimple.dat"))$dat
 
 ```
@@ -75,7 +87,7 @@ recruitment$constrained_deviations <- TRUE
 recruitment$deviations_min <- -15.0
 recruitment$deviations_max <- 15.0
 recruitment$deviation_phase <- abs(asap_input$phase_rec_devs)
-recruitment$SetDeviations(rep(0.0, times=nyears))
+recruitment$SetDeviations(rep(0.1, times=nyears))
 
 # Growth settings
 growth <- new(r4mas$VonBertalanffyModified)
@@ -112,7 +124,7 @@ for (i in 1:survey_num) {
 growth$SetUndifferentiatedCatchWeight(catch_empirical_weight)
 growth$SetUndifferentiatedWeightAtSeasonStart(jan1_empirical_weight)
 growth$SetUndifferentiatedWeightAtSpawning(ssb_empirical_weight)
-growth$SetUndifferentiatedSurveyWeight(survey_empirical_weight[[1]]) # How to set emprical weight-at-age for two surveys? One survey unit is biomass and the other survey unit is number. The data are stored in survey_empirical_weight list.
+growth$SetUndifferentiatedSurveyWeight(survey_empirical_weight[[1]]) # How to set empirical weight-at-age for two surveys? One survey unit is biomass and the other survey unit is number. The data are stored in survey_empirical_weight list.
 
 # Maturity settings
 maturity <- new(r4mas$Maturity)
@@ -130,14 +142,14 @@ movement$connectivity_recruits <- c(1.0)
 
 # Initial deviations
 initial_deviations <- new(r4mas$InitialDeviations)
-initial_deviations$values <- rep(0, times=nages)
+initial_deviations$values <- rep(0.1, times=nages)
 initial_deviations$estimate <- 
   ifelse(asap_input$phase_N1_devs < 0, FALSE, TRUE)
 initial_deviations$phase <- abs(asap_input$phase_N1_devs)
 
 # Create population
 population=new(r4mas$Population)
-for (y in 1:(nyears))
+for (y in 0:(nyears-1))
 {
   population$AddMovement(movement$id, y)
 }
@@ -168,7 +180,7 @@ for (i in 1:fleet_num){
 # Likelihood component settings
 fleet_index_comp_nll <- vector(mode="list", length=fleet_num)
 fleet_age_comp_nll <- vector(mode="list", length=fleet_num)
-for (i in 1:survey_num){
+for (i in 1:fleet_num){
   fleet_index_comp_nll[[i]] <- new(r4mas$Lognormal)
   fleet_index_comp_nll[[i]]$use_bias_correction <- FALSE
 
@@ -222,7 +234,7 @@ fishing_mortality$SetValues(rep(asap_input$F1_ini, nyears))
 # Create the fleet
 fleet <- vector(mode="list", length=fleet_num)
 
-for (i in 1:survey_num){
+for (i in 1:fleet_num){
   fleet[[i]] <- new(r4mas$Fleet)
   fleet[[i]]$AddIndexData(catch_index[[i]]$id, "undifferentiated")
   fleet[[i]]$AddAgeCompData(catch_comp[[i]]$id, "undifferentiated")
@@ -420,7 +432,7 @@ mas$q <- list(parameter_table$Value[parameter_table$Parameter=="q_1"])
 ```
 
 ## Generate comparison figures
-Compare temporal trends of biomass(B), abundance(A), spawning stock biomass (SSB), recruit (R), fishinig mortality (F), Landings (L), and Survey index (SI) from `ASAP` (dots) and `MAS` (lines).
+Compare temporal trends of biomass(B), abundance(A), spawning stock biomass (SSB), recruit (R), fishing mortality (F), Landings (L), and Survey index (SI) from `ASAP` (dots) and `MAS` (lines).
 ```{r}
 years <- as.numeric(rownames(asap_output$N.age))
 par(mfrow=c(4, 2), mar=c(3, 3, 0, 0))
@@ -490,9 +502,9 @@ legend("topright",
 
 - How to link `r4mas$FishingMortality` with fleet (e.g., `fleet$AddFishingMortality`) when there are more than 1 fleet?
 
-- Include parameter names for age-based selectivity in RMAS ouputs?
+- Include parameter names for age-based selectivity in RMAS outputs?
 
 ### Potential causes of differences between ASAP and MAS estimates
 - ASAP uses data from two surveys but MAS only uses data from survey 1 at the current stage.
 
-- Selectivity of fleet is age-based selectivity. In ASAP, the selectivities from age 7-10 are fixed at 1. In MAS, the selectivities from age 1-10 are estimated.
+- Selectivity of fleet is age-based selectivity. In ASAP, the selectivity from age 7-10 is fixed at 1. In MAS, the selectivity from age 1-10 is estimated.

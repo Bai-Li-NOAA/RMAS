@@ -189,7 +189,7 @@ summary {
 
 <h1 class="title toc-ignore">SS Case Study</h1>
 <h4 class="author">Christine Stawitz and Bai Li</h4>
-<h4 class="date">Created on 08/05/2019; Updated on 03/09/2021</h4>
+<h4 class="date">Created on 08/05/2019; Updated on 03/10/2021</h4>
 
 </div>
 
@@ -212,7 +212,21 @@ library(r4ss)</code></pre>
 </div>
 <div id="read-ss-input-file" class="section level2">
 <h2>Read SS input file</h2>
-<pre class="r"><code>data_dir &lt;- &quot;C:/Users/bai.li/Documents/Github/RMAS/vignettes/004_SSCaseStudy&quot;
+<pre class="r"><code># Download a .zip file of the repository 
+temp &lt;- tempdir()
+url &lt;- &quot;https://github.com/Bai-Li-NOAA/RMAS/archive/master.zip&quot;
+download.file(
+  url = &quot;https://github.com/Bai-Li-NOAA/RMAS/archive/master.zip&quot;,
+  destfile = file.path(temp, &quot;RMAS-master.zip&quot;)
+)
+
+# Unzip the .zip file
+unzip(zipfile = file.path(temp, &quot;RMAS-master.zip&quot;), 
+      exdir = temp)
+
+# Read ASAP input data  
+data_dir &lt;- file.path(temp, &quot;RMAS-master&quot;, &quot;vignettes&quot;, &quot;004_SSCaseStudy&quot;)
+
 ss_dat &lt;- SS_readdat_3.30(file = file.path(data_dir, &quot;data.ss&quot;),
                           verbose = FALSE)
 
@@ -311,7 +325,7 @@ recruitment$constrained_deviations &lt;- TRUE
 recruitment$deviations_min &lt;- -15.0
 recruitment$deviations_max &lt;- 15.0
 recruitment$deviation_phase &lt;- abs(ss_ctl$recdev_phase)
-recruitment$SetDeviations(rep(0.0, times=nyears))
+recruitment$SetDeviations(rep(0.1, times=nyears))
 
 # Growth settings
 fleet_num &lt;- length(fleet_id)
@@ -371,7 +385,7 @@ for (i in 1:survey_num) {
 }
 
 show(r4mas$VonBertalanffyModified)</code></pre>
-<pre><code>## C++ class 'VonBertalanffyModified' &lt;00000000160ae990&gt;
+<pre><code>## C++ class 'VonBertalanffyModified' &lt;00000000160aca40&gt;
 ## Constructors:
 ##     VonBertalanffyModified()
 ## 
@@ -421,11 +435,11 @@ growth$SetMaleWeightAtSeasonStart(jan1_waa[[2]])
 growth$SetFemaleWeightAtSpawning(ssb_waa[[1]])
 growth$SetMaleWeightAtSpawning(ssb_waa[[2]])
 growth$SetFemaleSurveyWeight(survey_waa[[1]][[1]])
-growth$SetMaleSurveyWeight(survey_waa[[1]][[2]]) # How to set emprical weight-at-age for two surveys? One survey unit is biomass and the other survey unit is number. The data are stored in survey_empirical_weight list.
+growth$SetMaleSurveyWeight(survey_waa[[1]][[2]]) # How to set empirical weight-at-age for two surveys? One survey unit is biomass and the other survey unit is number. The data are stored in survey_empirical_weight list.
 
 # Maturity settings
 show(r4mas$Maturity)</code></pre>
-<pre><code>## C++ class 'Maturity' &lt;00000000160af1d0&gt;
+<pre><code>## C++ class 'Maturity' &lt;00000000160ab860&gt;
 ## Constructors:
 ##     Maturity()
 ## 
@@ -475,14 +489,14 @@ initial_deviations &lt;- vector(mode=&quot;list&quot;, length=ngenders)
 
 for (j in 1:ngenders){
   initial_deviations[[j]] &lt;- new(r4mas$InitialDeviations)
-  initial_deviations[[j]]$values &lt;- rep(0, times=nages)
+  initial_deviations[[j]]$values &lt;- rep(0.1, times=nages)
   initial_deviations[[j]]$estimate &lt;- TRUE # Is it true in SS?
   initial_deviations[[j]]$phase &lt;- 2
 }
 
 # Create population
 population=new(r4mas$Population)
-for (y in 1:(nyears))
+for (y in 0:(nyears-1))
 {
   population$AddMovement(movement$id, y)
 }

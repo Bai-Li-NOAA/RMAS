@@ -154,7 +154,7 @@ recruitment$constrained_deviations <- TRUE
 recruitment$deviations_min <- -15.0
 recruitment$deviations_max <- 15.0
 recruitment$deviation_phase <- 2
-recruitment$SetDeviations(rep(0.0, times=om_input$nyr))
+recruitment$SetDeviations(rep(0.1, times=om_input$nyr))
 
 ```
 
@@ -219,7 +219,7 @@ movement$connectivity_recruits <- c(1.0)
 ```{r}
 
 initial_deviations <- new(r4mas$InitialDeviations)
-initial_deviations$values <- rep(0, times=om_input$nages)
+initial_deviations$values <- rep(0.1, times=om_input$nages)
 initial_deviations$estimate <- TRUE
 initial_deviations$phase <- 2
 
@@ -229,7 +229,7 @@ initial_deviations$phase <- 2
 ```{r}
 
 population=new(r4mas$Population)
-for (y in 0:(nyears))
+for (y in 0:(nyears-1))
 {
   population$AddMovement(movement$id, y)
 }
@@ -457,7 +457,7 @@ mas$selexparm_survey <- list(a50=parameter_table$Value[parameter_table$Parameter
 ```
 
 ### Generate comparison figures
-Compare temporal trends of biomass(B), abundance(A), spawning stock biomass (SSB), recruit (R), fishinig mortality (F), Landings (L), and Survey index (SI) from the OM (dots) and `MAS` (lines).
+Compare temporal trends of biomass(B), abundance(A), spawning stock biomass (SSB), recruit (R), fishing mortality (F), Landings (L), and Survey index (SI) from the OM (dots) and `MAS` (lines).
 ```{r}
 par(mfrow=c(4, 2), mar=c(3, 3, 0, 0))
 var <- c("biomass", "abundance", "ssb", "recruit", "f", 
@@ -513,7 +513,7 @@ legend("topright",
 ```
 
 ### Generate comparison table
-Compare estimated R0, q, and selectivity parameters. The etimated selectivity slope values from the `MAS` were converted using 1/slope to match the slope from the OM. 
+Compare estimated R0, q, and selectivity parameters. The estimated selectivity slope values from the `MAS` were converted using 1/slope to match the slope from the OM. 
 ```{r}
 var <- c("R0", "q", "selexparm_fleet", "selexparm_survey")
 summary_table <- matrix(c(om$r0, mas$r0, 

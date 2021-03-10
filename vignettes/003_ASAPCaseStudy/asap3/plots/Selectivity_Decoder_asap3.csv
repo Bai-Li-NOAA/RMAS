@@ -1,0 +1,23 @@
+"Source","Name","NameNum","SelType","Param","ParamNum","InitGuess","Phase","Lambda","CV","Estimate","EstimatedStDev","EstimatedCV"
+"Fleet","Selblock 1",1,"Age Specific","Age 1",1,0.003,4,0,0.9,0.1543,0.013636,0.0883732987686325
+"Fleet","Selblock 1",1,"Age Specific","Age 2",2,0.3,4,0,0.9,0.34984,0.027192,0.0777269608964098
+"Fleet","Selblock 1",1,"Age Specific","Age 3",3,0.8,4,0,0.9,0.6141,0.045195,0.0735955056179775
+"Fleet","Selblock 1",1,"Age Specific","Age 4",4,1,4,0,0.9,0.87968,0.06337,0.0720375591124045
+"Fleet","Selblock 1",1,"Age Specific","Age 5",5,1,4,0,0.9,0.94527,0.071986,0.0761539031176278
+"Fleet","Selblock 1",1,"Age Specific","Age 6",6,1,4,0,0.9,0.92633,0.07667,0.0827674802716095
+"Fleet","Selblock 1",1,"Age Specific","Age 7",7,1,-1,0,0.9,NA,NA,NA
+"Fleet","Selblock 1",1,"Age Specific","Age 8",8,1,-1,0,0.9,NA,NA,NA
+"Fleet","Selblock 1",1,"Age Specific","Age 9",9,1,-1,0,0.9,NA,NA,NA
+"Fleet","Selblock 1",1,"Age Specific","Age 10",10,1,-1,0,0.9,NA,NA,NA
+"Index","INDEX-1",1,"Single Logistic","A50",1,3,2,0,0.5,3.2608,0.11389,0.0349270117762512
+"Index","INDEX-1",1,"Single Logistic","Slope",2,1,2,0,0.5,0.63873,0.037713,0.0590437273965525
+"Index","INDEX-2",2,"Age Specific","Age 1",3,1,-1,0,1,NA,NA,NA
+"Index","INDEX-2",2,"Age Specific","Age 2",4,0,-1,0,1,NA,NA,NA
+"Index","INDEX-2",2,"Age Specific","Age 3",5,0,-1,0,1,NA,NA,NA
+"Index","INDEX-2",2,"Age Specific","Age 4",6,0,-1,0,1,NA,NA,NA
+"Index","INDEX-2",2,"Age Specific","Age 5",7,0,-1,0,1,NA,NA,NA
+"Index","INDEX-2",2,"Age Specific","Age 6",8,0,-1,0,1,NA,NA,NA
+"Index","INDEX-2",2,"Age Specific","Age 7",9,0,-1,0,1,NA,NA,NA
+"Index","INDEX-2",2,"Age Specific","Age 8",10,0,-1,0,1,NA,NA,NA
+"Index","INDEX-2",2,"Age Specific","Age 9",11,0,-1,0,1,NA,NA,NA
+"Index","INDEX-2",2,"Age Specific","Age 10",12,0,-1,0,1,NA,NA,NA
