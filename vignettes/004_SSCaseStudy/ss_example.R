@@ -419,5 +419,5 @@ for (i in 1:survey_num){
   mas_model$AddSurvey(survey[[i]]$id)
 }
 
-mas_model$Run()
-mas_model$Reset()
+# mas_model$Run()
+# mas_model$Reset()

@@ -84,7 +84,7 @@
       <h1 data-toc-skip>SS Case Study</h1>
                         <h4 class="author">Christine Stawitz and Bai Li</h4>
             
-            <h4 class="date">Created on 08/05/2019; Updated on 03/10/2021</h4>
+            <h4 class="date">Created on 08/05/2019; Updated on 03/11/2021</h4>
       
       
       <div class="hidden name"><code>004_SSCaseStudy.Rmd</code></div>
@@ -291,7 +291,7 @@
 <span class="op">}</span>
 
 <span class="fu">show</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">VonBertalanffyModified</span><span class="op">)</span></code></pre></div>
-<pre><code>## C++ class 'VonBertalanffyModified' &lt;000000001e632dd0&gt;
+<pre><code>## C++ class 'VonBertalanffyModified' &lt;000000001e581250&gt;
 ## Constructors:
 ##     VonBertalanffyModified()
 ## 
@@ -346,7 +346,7 @@
 
 <span class="co"># Maturity settings</span>
 <span class="fu">show</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Maturity</span><span class="op">)</span></code></pre></div>
-<pre><code>## C++ class 'Maturity' &lt;000000001e632010&gt;
+<pre><code>## C++ class 'Maturity' &lt;000000001e582dd0&gt;
 ## Constructors:
 ##     Maturity()
 ## 
@@ -404,7 +404,7 @@
 
 <span class="co"># Create population</span>
 <span class="va">population</span><span class="op">=</span><span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Population</span><span class="op">)</span>
-<span class="kw">for</span> <span class="op">(</span><span class="va">y</span> <span class="kw">in</span> <span class="fl">0</span><span class="op">:</span><span class="op">(</span><span class="va">nyears</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">y</span> <span class="kw">in</span> <span class="fl">0</span><span class="op">:</span><span class="op">(</span><span class="va">nyears</span><span class="op">)</span><span class="op">)</span>
 <span class="op">{</span>
   <span class="va">population</span><span class="op">$</span><span class="fu">AddMovement</span><span class="op">(</span><span class="va">movement</span><span class="op">$</span><span class="va">id</span>, <span class="va">y</span><span class="op">)</span>
 <span class="op">}</span>

@@ -149,7 +149,7 @@ initial_deviations$phase <- abs(asap_input$phase_N1_devs)
 
 # Create population
 population=new(r4mas$Population)
-for (y in 0:(nyears-1))
+for (y in 0:(nyears))
 {
   population$AddMovement(movement$id, y)
 }

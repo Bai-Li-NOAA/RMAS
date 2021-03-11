@@ -249,7 +249,7 @@ for (j in 1:ngenders){
 
 # Create population
 population=new(r4mas$Population)
-for (y in 0:(nyears-1))
+for (y in 0:(nyears))
 {
   population$AddMovement(movement$id, y)
 }

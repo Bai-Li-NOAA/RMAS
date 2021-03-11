@@ -83,7 +83,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Model Comparison Project Example</h1>
             
-            <h4 class="date">03/10/2021</h4>
+            <h4 class="date">03/11/2021</h4>
       
       
       <div class="hidden name"><code>002_ModelComparisonProjectExample.Rmd</code></div>
@@ -110,7 +110,6 @@
 <a href="#install-packages" class="anchor"></a>1. Install packages</h2>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"nmfs-fish-tools/RMAS"</span><span class="op">)</span>
-
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">RMAS</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.rcpp.org">Rcpp</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://arxiv.org/abs/1403.2805">jsonlite</a></span><span class="op">)</span></code></pre></div>
@@ -162,16 +161,13 @@
 <p>If you receive errors when using option 1, please use option 2:</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Find the path of dynamically-loaded file with extension .so on Linux, .dylib on OS X or .dll on Windows</span>
-
 <span class="va">libs_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"libs"</span>, package<span class="op">=</span><span class="st">"RMAS"</span><span class="op">)</span>
 <span class="va">dll_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"RMAS"</span>, <span class="va">.Platform</span><span class="op">$</span><span class="va">dynlib.ext</span>, sep<span class="op">=</span><span class="st">""</span><span class="op">)</span>
-
 <span class="kw">if</span><span class="op">(</span><span class="va">.Platform</span><span class="op">$</span><span class="va">OS.type</span> <span class="op">==</span> <span class="st">"windows"</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">dll_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">libs_path</span>, <span class="va">.Platform</span><span class="op">$</span><span class="va">r_arch</span>, <span class="va">dll_name</span><span class="op">)</span>
 <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
   <span class="va">dll_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">libs_path</span>, <span class="va">dll_name</span><span class="op">)</span>
 <span class="op">}</span>
-
 <span class="va">r4mas</span> <span class="op">&lt;-</span> <span class="fu">Rcpp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/Module.html">Module</a></span><span class="op">(</span><span class="st">"rmas"</span>, <span class="fu"><a href="https://rdrr.io/r/base/dynload.html">dyn.load</a></span><span class="op">(</span><span class="va">dll_path</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="specify-inputs" class="section level2">
@@ -217,13 +213,9 @@
 <a href="#general-settings-of-year-season-age-and-area" class="anchor"></a>General settings of year, season, age, and area</h3>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nyears</span> <span class="op">&lt;-</span> <span class="va">om_input</span><span class="op">$</span><span class="va">nyr</span>
-
 <span class="va">nseasons</span> <span class="op">&lt;-</span> <span class="fl">1</span>
-
 <span class="va">nages</span> <span class="op">&lt;-</span> <span class="va">om_input</span><span class="op">$</span><span class="va">nages</span>
-
 <span class="va">ages</span> <span class="op">&lt;-</span>  <span class="va">om_input</span><span class="op">$</span><span class="va">ages</span>
-
 <span class="va">area1</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Area</span><span class="op">)</span>
 <span class="va">area1</span><span class="op">$</span><span class="va">name</span> <span class="op">&lt;-</span> <span class="st">"area1"</span></code></pre></div>
 </div>
@@ -232,23 +224,19 @@
 <a href="#recruitment-settings" class="anchor"></a>Recruitment settings</h3>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">recruitment</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">BevertonHoltRecruitment</span><span class="op">)</span>
-
 <span class="va">recruitment</span><span class="op">$</span><span class="va">R0</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="va">om_input</span><span class="op">$</span><span class="va">R0</span><span class="op">/</span><span class="fl">1000</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">R0</span><span class="op">$</span><span class="va">estimated</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">R0</span><span class="op">$</span><span class="va">phase</span> <span class="op">&lt;-</span> <span class="fl">1</span>
-
 <span class="va">recruitment</span><span class="op">$</span><span class="va">h</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="va">om_input</span><span class="op">$</span><span class="va">h</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">h</span><span class="op">$</span><span class="va">estimated</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">h</span><span class="op">$</span><span class="va">phase</span> <span class="op">&lt;-</span> <span class="fl">3</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">h</span><span class="op">$</span><span class="va">min</span> <span class="op">&lt;-</span> <span class="fl">0.2001</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">h</span><span class="op">$</span><span class="va">max</span> <span class="op">&lt;-</span> <span class="fl">1.0</span>
-
 <span class="va">recruitment</span><span class="op">$</span><span class="va">sigma_r</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">om_input</span><span class="op">$</span><span class="va">logR_sd</span><span class="op">)</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">sigma_r</span><span class="op">$</span><span class="va">estimated</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">sigma_r</span><span class="op">$</span><span class="va">min</span> <span class="op">&lt;-</span> <span class="fl">0</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">sigma_r</span><span class="op">$</span><span class="va">max</span> <span class="op">&lt;-</span> <span class="fl">1.0</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">sigma_r</span><span class="op">$</span><span class="va">phase</span> <span class="op">&lt;-</span> <span class="fl">2</span>
-
 <span class="va">recruitment</span><span class="op">$</span><span class="va">estimate_deviations</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">constrained_deviations</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="va">recruitment</span><span class="op">$</span><span class="va">deviations_min</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">15.0</span>
@@ -262,10 +250,8 @@
 <p>In this example, we directly use weight-at-age data for the assessment.</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">growth</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">VonBertalanffyModified</span><span class="op">)</span>
-
 <span class="va">empirical_weight</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">om_input</span><span class="op">$</span><span class="va">W.kg</span>, times<span class="op">=</span><span class="va">om_input</span><span class="op">$</span><span class="va">nyr</span><span class="op">)</span>
 <span class="va">survey_empirical_weight</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="va">nages</span><span class="op">*</span><span class="va">nyears</span>, <span class="fl">1.0</span><span class="op">)</span>
-
 <span class="va">growth</span><span class="op">$</span><span class="fu">SetUndifferentiatedCatchWeight</span><span class="op">(</span><span class="va">empirical_weight</span><span class="op">)</span>
 <span class="va">growth</span><span class="op">$</span><span class="fu">SetUndifferentiatedWeightAtSeasonStart</span><span class="op">(</span><span class="va">empirical_weight</span><span class="op">)</span>
 <span class="va">growth</span><span class="op">$</span><span class="fu">SetUndifferentiatedWeightAtSpawning</span><span class="op">(</span><span class="va">empirical_weight</span><span class="op">)</span>
@@ -320,11 +306,10 @@
 <a href="#creat-the-population" class="anchor"></a>Creat the population</h3>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">population</span><span class="op">=</span><span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Population</span><span class="op">)</span>
-<span class="kw">for</span> <span class="op">(</span><span class="va">y</span> <span class="kw">in</span> <span class="fl">0</span><span class="op">:</span><span class="op">(</span><span class="va">nyears</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">y</span> <span class="kw">in</span> <span class="fl">0</span><span class="op">:</span><span class="op">(</span><span class="va">nyears</span><span class="op">)</span><span class="op">)</span>
 <span class="op">{</span>
   <span class="va">population</span><span class="op">$</span><span class="fu">AddMovement</span><span class="op">(</span><span class="va">movement</span><span class="op">$</span><span class="va">id</span>, <span class="va">y</span><span class="op">)</span>
 <span class="op">}</span>
-
 <span class="va">population</span><span class="op">$</span><span class="fu">AddNaturalMortality</span><span class="op">(</span><span class="va">natural_mortality</span><span class="op">$</span><span class="va">id</span>,<span class="va">area1</span><span class="op">$</span><span class="va">id</span>,<span class="st">"undifferentiated"</span><span class="op">)</span>
 <span class="va">population</span><span class="op">$</span><span class="fu">AddMaturity</span><span class="op">(</span><span class="va">maturity</span><span class="op">$</span><span class="va">id</span>,<span class="va">area1</span><span class="op">$</span><span class="va">id</span>, <span class="st">"undifferentiated"</span><span class="op">)</span>
 <span class="va">population</span><span class="op">$</span><span class="fu">AddRecruitment</span><span class="op">(</span><span class="va">recruitment</span><span class="op">$</span><span class="va">id</span>, <span class="fl">1</span>, <span class="va">area1</span><span class="op">$</span><span class="va">id</span><span class="op">)</span>
@@ -340,18 +325,14 @@
 <span class="va">catch_index</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">IndexData</span><span class="op">)</span>
 <span class="va">catch_index</span><span class="op">$</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="va">em_input</span><span class="op">$</span><span class="va">L.obs</span><span class="op">$</span><span class="va">fleet1</span>
 <span class="va">catch_index</span><span class="op">$</span><span class="va">error</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">em_input</span><span class="op">$</span><span class="va">cv.L</span><span class="op">$</span><span class="va">fleet1</span>, times<span class="op">=</span><span class="va">om_input</span><span class="op">$</span><span class="va">nyr</span><span class="op">)</span>
-
 <span class="co"># Catch composition data</span>
 <span class="va">catch_comp</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">AgeCompData</span><span class="op">)</span>
 <span class="va">catch_comp</span><span class="op">$</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">em_input</span><span class="op">$</span><span class="va">L.age.obs</span><span class="op">$</span><span class="va">fleet1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">catch_comp</span><span class="op">$</span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">em_input</span><span class="op">$</span><span class="va">n.L</span><span class="op">$</span><span class="va">fleet1</span>, <span class="va">nyears</span><span class="op">*</span><span class="va">nseasons</span><span class="op">)</span>
-
 <span class="co"># Likelihood component settings</span>
 <span class="va">fleet_index_comp_nll</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Lognormal</span><span class="op">)</span>
 <span class="va">fleet_index_comp_nll</span><span class="op">$</span><span class="va">use_bias_correction</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>
-
 <span class="va">fleet_age_comp_nll</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Multinomial</span><span class="op">)</span>
-
 <span class="co"># Fleet selectivity settings</span>
 <span class="va">fleet_selectivity</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">LogisticSelectivity</span><span class="op">)</span>
 <span class="va">fleet_selectivity</span><span class="op">$</span><span class="va">a50</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="va">om_input</span><span class="op">$</span><span class="va">sel_fleet</span><span class="op">$</span><span class="va">fleet1</span><span class="op">$</span><span class="va">A50.sel</span>
@@ -359,13 +340,11 @@
 <span class="va">fleet_selectivity</span><span class="op">$</span><span class="va">a50</span><span class="op">$</span><span class="va">phase</span> <span class="op">&lt;-</span> <span class="fl">2</span>
 <span class="va">fleet_selectivity</span><span class="op">$</span><span class="va">a50</span><span class="op">$</span><span class="va">min</span> <span class="op">&lt;-</span> <span class="fl">0.0</span>
 <span class="va">fleet_selectivity</span><span class="op">$</span><span class="va">a50</span><span class="op">$</span><span class="va">max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">om_input</span><span class="op">$</span><span class="va">ages</span><span class="op">)</span>
-
 <span class="va">fleet_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="va">om_input</span><span class="op">$</span><span class="va">sel_fleet</span><span class="op">$</span><span class="va">fleet1</span><span class="op">$</span><span class="va">slope.sel</span>
 <span class="va">fleet_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">estimated</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="va">fleet_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">phase</span> <span class="op">&lt;-</span> <span class="fl">2</span>
 <span class="va">fleet_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">min</span> <span class="op">&lt;-</span> <span class="fl">0.0001</span>
 <span class="va">fleet_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">max</span> <span class="op">&lt;-</span> <span class="fl">5</span>
-
 <span class="co"># Fishing mortality settings</span>
 <span class="va">fishing_mortality</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">FishingMortality</span><span class="op">)</span>
 <span class="va">fishing_mortality</span><span class="op">$</span><span class="va">estimate</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
@@ -373,7 +352,6 @@
 <span class="va">fishing_mortality</span><span class="op">$</span><span class="va">min</span> <span class="op">&lt;-</span> <span class="fl">0.0</span>
 <span class="va">fishing_mortality</span><span class="op">$</span><span class="va">max</span> <span class="op">&lt;-</span> <span class="fl">4</span>
 <span class="va">fishing_mortality</span><span class="op">$</span><span class="fu">SetValues</span><span class="op">(</span><span class="va">om_output</span><span class="op">$</span><span class="va">f</span><span class="op">)</span>
-
 <span class="co"># Create the fleet</span>
 <span class="va">fleet</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Fleet</span><span class="op">)</span>
 <span class="va">fleet</span><span class="op">$</span><span class="fu">AddIndexData</span><span class="op">(</span><span class="va">catch_index</span><span class="op">$</span><span class="va">id</span>, <span class="st">"undifferentiated"</span><span class="op">)</span>
@@ -391,18 +369,14 @@
 <span class="va">survey_index</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">IndexData</span><span class="op">)</span>
 <span class="va">survey_index</span><span class="op">$</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="va">em_input</span><span class="op">$</span><span class="va">survey.obs</span><span class="op">$</span><span class="va">survey1</span>
 <span class="va">survey_index</span><span class="op">$</span><span class="va">error</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">em_input</span><span class="op">$</span><span class="va">cv.survey</span><span class="op">$</span><span class="va">survey1</span>, times<span class="op">=</span><span class="va">om_input</span><span class="op">$</span><span class="va">nyr</span><span class="op">)</span>
-
 <span class="co"># Survey composition</span>
 <span class="va">survey_comp</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">AgeCompData</span><span class="op">)</span>
 <span class="va">survey_comp</span><span class="op">$</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">em_input</span><span class="op">$</span><span class="va">survey.age.obs</span><span class="op">$</span><span class="va">survey1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">survey_comp</span><span class="op">$</span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">em_input</span><span class="op">$</span><span class="va">n.survey</span><span class="op">$</span><span class="va">survey1</span>, times<span class="op">=</span><span class="va">om_input</span><span class="op">$</span><span class="va">nyr</span><span class="op">)</span>
-
 <span class="co"># Likelihood component settings</span>
 <span class="va">survey_index_comp_nll</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Lognormal</span><span class="op">)</span>
 <span class="va">survey_index_comp_nll</span><span class="op">$</span><span class="va">use_bias_correction</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>
-
 <span class="va">survey_age_comp_nll</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Multinomial</span><span class="op">)</span>
-
 <span class="co"># Survey selectivity settings</span>
 <span class="va">survey_selectivity</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">LogisticSelectivity</span><span class="op">)</span>
 <span class="va">survey_selectivity</span><span class="op">$</span><span class="va">a50</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="va">om_input</span><span class="op">$</span><span class="va">sel_survey</span><span class="op">$</span><span class="va">survey1</span><span class="op">$</span><span class="va">A50.sel</span>
@@ -410,13 +384,11 @@
 <span class="va">survey_selectivity</span><span class="op">$</span><span class="va">a50</span><span class="op">$</span><span class="va">phase</span> <span class="op">&lt;-</span> <span class="fl">2</span>
 <span class="va">survey_selectivity</span><span class="op">$</span><span class="va">a50</span><span class="op">$</span><span class="va">min</span> <span class="op">&lt;-</span> <span class="fl">0</span>
 <span class="va">survey_selectivity</span><span class="op">$</span><span class="va">a50</span><span class="op">$</span><span class="va">max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">om_input</span><span class="op">$</span><span class="va">ages</span><span class="op">)</span>
-
 <span class="va">survey_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="va">om_input</span><span class="op">$</span><span class="va">sel_survey</span><span class="op">$</span><span class="va">survey1</span><span class="op">$</span><span class="va">slope.sel</span>
 <span class="va">survey_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">estimated</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="va">survey_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">phase</span> <span class="op">&lt;-</span> <span class="fl">2</span>
 <span class="va">survey_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">min</span> <span class="op">&lt;-</span> <span class="fl">0.0001</span>
 <span class="va">survey_selectivity</span><span class="op">$</span><span class="va">slope</span><span class="op">$</span><span class="va">max</span> <span class="op">&lt;-</span> <span class="fl">5</span>
-
 <span class="co"># Create the survey</span>
 <span class="va">survey</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">Survey</span><span class="op">)</span>
 <span class="va">survey</span><span class="op">$</span><span class="fu">AddIndexData</span><span class="op">(</span><span class="va">survey_index</span><span class="op">$</span><span class="va">id</span>, <span class="st">"undifferentiated"</span><span class="op">)</span>
@@ -424,7 +396,6 @@
 <span class="va">survey</span><span class="op">$</span><span class="fu">SetIndexNllComponent</span><span class="op">(</span><span class="va">survey_index_comp_nll</span><span class="op">$</span><span class="va">id</span><span class="op">)</span>
 <span class="va">survey</span><span class="op">$</span><span class="fu">SetAgeCompNllComponent</span><span class="op">(</span><span class="va">survey_age_comp_nll</span><span class="op">$</span><span class="va">id</span><span class="op">)</span>
 <span class="va">survey</span><span class="op">$</span><span class="fu">AddSelectivity</span><span class="op">(</span><span class="va">survey_selectivity</span><span class="op">$</span><span class="va">id</span>, <span class="fl">1</span>, <span class="va">area1</span><span class="op">$</span><span class="va">id</span><span class="op">)</span>
-
 <span class="co"># Catchability settings</span>
 <span class="va">survey</span><span class="op">$</span><span class="va">q</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="va">em_input</span><span class="op">$</span><span class="va">survey_q</span><span class="op">$</span><span class="va">survey1</span>
 <span class="va">survey</span><span class="op">$</span><span class="va">q</span><span class="op">$</span><span class="va">min</span> <span class="op">&lt;-</span> <span class="fl">0</span>
@@ -437,7 +408,6 @@
 <a href="#build-the-mas-model" class="anchor"></a>Build the MAS model</h3>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mas_model</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span><span class="va">r4mas</span><span class="op">$</span><span class="va">MASModel</span><span class="op">)</span>
-
 <span class="va">mas_model</span><span class="op">$</span><span class="va">nyears</span> <span class="op">&lt;-</span> <span class="va">nyears</span>
 <span class="va">mas_model</span><span class="op">$</span><span class="va">nseasons</span> <span class="op">&lt;-</span> <span class="va">nseasons</span>
 <span class="va">mas_model</span><span class="op">$</span><span class="va">nages</span> <span class="op">&lt;-</span> <span class="va">nages</span>
@@ -446,7 +416,6 @@
 <span class="va">mas_model</span><span class="op">$</span><span class="va">catch_season_offset</span> <span class="op">&lt;-</span> <span class="fl">0.0</span>
 <span class="va">mas_model</span><span class="op">$</span><span class="va">spawning_season_offset</span> <span class="op">&lt;-</span> <span class="fl">0.0</span>
 <span class="va">mas_model</span><span class="op">$</span><span class="va">survey_season_offset</span> <span class="op">&lt;-</span> <span class="fl">0.0</span>
-
 <span class="va">mas_model</span><span class="op">$</span><span class="fu">AddPopulation</span><span class="op">(</span><span class="va">population</span><span class="op">$</span><span class="va">id</span><span class="op">)</span>
 <span class="va">mas_model</span><span class="op">$</span><span class="fu">AddFleet</span><span class="op">(</span><span class="va">fleet</span><span class="op">$</span><span class="va">id</span><span class="op">)</span>
 <span class="va">mas_model</span><span class="op">$</span><span class="fu">AddSurvey</span><span class="op">(</span><span class="va">survey</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></code></pre></div>
@@ -462,14 +431,11 @@
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Run MAS</span>
 <span class="va">mas_model</span><span class="op">$</span><span class="fu">Run</span><span class="op">(</span><span class="op">)</span>
-
 <span class="co"># Write MAS outputs to a json file</span>
 <span class="fu"><a href="https://rdrr.io/r/base/write.html">write</a></span><span class="op">(</span><span class="va">mas_model</span><span class="op">$</span><span class="fu">GetOutput</span><span class="op">(</span><span class="op">)</span>,
       file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">om_path</span>, <span class="st">"mas_output.json"</span><span class="op">)</span><span class="op">)</span>
-
 <span class="co"># Reset MAS for next run</span>
 <span class="va">mas_model</span><span class="op">$</span><span class="fu">Reset</span><span class="op">(</span><span class="op">)</span>
-
 <span class="co"># Import MAS output</span>
 <span class="va">mas_output</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html">read_json</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">om_path</span>, <span class="st">"mas_output.json"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
@@ -486,99 +452,98 @@
                                 digits <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
 <span class="va">parameter_table</span><span class="op">$</span><span class="va">Gradient</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">parameter_table</span><span class="op">$</span><span class="va">Gradient</span><span class="op">)</span>,
                                 digits <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>
-
 <span class="va">parameter_table</span></code></pre></div>
 <pre><code>##                       Parameter     Value  Gradient
-## 1                           q_1  0.000342 -0.011320
-## 2                      log_R0_1  9.286433 -0.000382
-## 3   recruitment_deviations[0]_1 -0.745913  0.000000
-## 4   recruitment_deviations[1]_1 -0.762434 -0.000022
-## 5   recruitment_deviations[2]_1 -1.136047 -0.000017
-## 6   recruitment_deviations[3]_1 -1.147227 -0.000014
-## 7   recruitment_deviations[4]_1 -0.740476 -0.000024
-## 8   recruitment_deviations[5]_1 -0.680961 -0.000028
-## 9   recruitment_deviations[6]_1 -1.013715 -0.000020
-## 10  recruitment_deviations[7]_1 -0.767016 -0.000028
-## 11  recruitment_deviations[8]_1 -0.979244 -0.000023
-## 12  recruitment_deviations[9]_1 -0.793149 -0.000029
-## 13 recruitment_deviations[10]_1 -0.774212 -0.000025
-## 14 recruitment_deviations[11]_1 -0.815487 -0.000027
-## 15 recruitment_deviations[12]_1 -0.957238 -0.000021
-## 16 recruitment_deviations[13]_1 -0.762414 -0.000023
-## 17 recruitment_deviations[14]_1 -0.878091 -0.000025
-## 18 recruitment_deviations[15]_1 -0.615657 -0.000028
-## 19 recruitment_deviations[16]_1 -0.601673 -0.000031
-## 20 recruitment_deviations[17]_1 -0.943181 -0.000022
-## 21 recruitment_deviations[18]_1 -0.683105 -0.000022
-## 22 recruitment_deviations[19]_1 -0.886000 -0.000018
-## 23 recruitment_deviations[20]_1 -0.290317 -0.000027
-## 24 recruitment_deviations[21]_1 -0.284609 -0.000027
-## 25 recruitment_deviations[22]_1 -0.540647 -0.000017
-## 26 recruitment_deviations[23]_1 -0.546004 -0.000017
-## 27 recruitment_deviations[24]_1 -0.272757 -0.000019
-## 28 recruitment_deviations[25]_1 -0.517425 -0.000010
-## 29 recruitment_deviations[26]_1 -0.323458 -0.000007
-## 30 recruitment_deviations[27]_1 -0.026979 -0.000007
-## 31 recruitment_deviations[28]_1  0.009443 -0.000004
-## 32 recruitment_deviations[29]_1 -0.219965 -0.000001
-## 33   logistic_selectivity_a50_2  1.435461  0.000004
-## 34 logistic_selectivity_slope_2  0.530856  0.000000
-## 35   logistic_selectivity_a50_1  2.093840 -0.000045
-## 36 logistic_selectivity_slope_1  1.075880 -0.000002
-## 37    fishing_mortality[0][0]_1  0.009301 -0.001276
-## 38    fishing_mortality[1][0]_1  0.027012 -0.000178
-## 39   fishing_mortality[19][0]_1  0.260898  0.000061
-## 40   fishing_mortality[17][0]_1  0.260518  0.000115
-## 41    fishing_mortality[5][0]_1  0.088120  0.000118
-## 42   fishing_mortality[29][0]_1  0.574211 -0.000034
-## 43   fishing_mortality[27][0]_1  0.477834 -0.000015
-## 44   fishing_mortality[15][0]_1  0.160929  0.000028
-## 45    fishing_mortality[4][0]_1  0.048619 -0.000030
-## 46    fishing_mortality[6][0]_1  0.087911  0.000026
-## 47    fishing_mortality[8][0]_1  0.109048  0.000034
-## 48   fishing_mortality[12][0]_1  0.116203  0.000009
-## 49   fishing_mortality[24][0]_1  0.367877  0.000014
-## 50    fishing_mortality[2][0]_1  0.045016 -0.000032
-## 51    fishing_mortality[7][0]_1  0.185642  0.000036
-## 52    fishing_mortality[3][0]_1  0.061289  0.000011
-## 53   fishing_mortality[16][0]_1  0.317002  0.000084
-## 54   fishing_mortality[18][0]_1  0.260752 -0.000011
-## 55   fishing_mortality[14][0]_1  0.180522  0.000077
-## 56   fishing_mortality[25][0]_1  0.339934 -0.000009
-## 57   fishing_mortality[20][0]_1  0.361513  0.000066
-## 58   fishing_mortality[26][0]_1  0.336377 -0.000022
-## 59   fishing_mortality[10][0]_1  0.150010  0.000114
-## 60   fishing_mortality[13][0]_1  0.167765  0.000093
-## 61   fishing_mortality[28][0]_1  0.368980 -0.000008
-## 62    fishing_mortality[9][0]_1  0.132404  0.000039
-## 63   fishing_mortality[22][0]_1  0.437979  0.000039
-## 64   fishing_mortality[21][0]_1  0.265918 -0.000016
-## 65   fishing_mortality[23][0]_1  0.366796  0.000056
-## 66   fishing_mortality[11][0]_1  0.160845  0.000005
-## 67    f_initial_deviations[0]_1 -1.674474 -0.000008
-## 68    f_initial_deviations[1]_1 -1.769343 -0.000009
-## 69    f_initial_deviations[2]_1 -1.729513 -0.000009
-## 70    f_initial_deviations[3]_1 -1.696082 -0.000008
-## 71    f_initial_deviations[4]_1 -1.712506 -0.000008
-## 72    f_initial_deviations[5]_1 -1.673083 -0.000007
-## 73    f_initial_deviations[6]_1 -1.469955 -0.000008
-## 74    f_initial_deviations[7]_1 -1.818995 -0.000005
-## 75    f_initial_deviations[8]_1 -1.536046 -0.000006
-## 76    f_initial_deviations[9]_1 -1.938069 -0.000003
-## 77   f_initial_deviations[10]_1 -1.620425 -0.000004
-## 78   f_initial_deviations[11]_1 -1.855322 -0.000013
-## 79    m_initial_deviations[0]_1 -1.674474 -0.000008
-## 80    m_initial_deviations[1]_1 -1.769343 -0.000009
-## 81    m_initial_deviations[2]_1 -1.729513 -0.000009
-## 82    m_initial_deviations[3]_1 -1.696082 -0.000008
-## 83    m_initial_deviations[4]_1 -1.712506 -0.000008
-## 84    m_initial_deviations[5]_1 -1.673083 -0.000007
-## 85    m_initial_deviations[6]_1 -1.469955 -0.000008
-## 86    m_initial_deviations[7]_1 -1.818995 -0.000005
-## 87    m_initial_deviations[8]_1 -1.536046 -0.000006
-## 88    m_initial_deviations[9]_1 -1.938069 -0.000003
-## 89   m_initial_deviations[10]_1 -1.620425 -0.000004
-## 90   m_initial_deviations[11]_1 -1.855322 -0.000013</code></pre>
+## 1                           q_1  0.000342 -8.900251
+## 2                      log_R0_1  9.260942 -0.392419
+## 3   recruitment_deviations[0]_1 -0.748174 -0.001516
+## 4   recruitment_deviations[1]_1 -0.749872 -0.009322
+## 5   recruitment_deviations[2]_1 -1.123446  0.004841
+## 6   recruitment_deviations[3]_1 -1.134749 -0.009099
+## 7   recruitment_deviations[4]_1 -0.728189 -0.051918
+## 8   recruitment_deviations[5]_1 -0.668900 -0.029499
+## 9   recruitment_deviations[6]_1 -1.001845 -0.024176
+## 10  recruitment_deviations[7]_1 -0.755511 -0.080479
+## 11  recruitment_deviations[8]_1 -0.967893 -0.058478
+## 12  recruitment_deviations[9]_1 -0.782562 -0.070069
+## 13 recruitment_deviations[10]_1 -0.763848 -0.069709
+## 14 recruitment_deviations[11]_1 -0.805513 -0.076511
+## 15 recruitment_deviations[12]_1 -0.947707 -0.084889
+## 16 recruitment_deviations[13]_1 -0.753235 -0.093316
+## 17 recruitment_deviations[14]_1 -0.869038 -0.080974
+## 18 recruitment_deviations[15]_1 -0.607072 -0.124666
+## 19 recruitment_deviations[16]_1 -0.593430 -0.094076
+## 20 recruitment_deviations[17]_1 -0.935237 -0.079345
+## 21 recruitment_deviations[18]_1 -0.676001 -0.100597
+## 22 recruitment_deviations[19]_1 -0.879326 -0.070565
+## 23 recruitment_deviations[20]_1 -0.284111 -0.118057
+## 24 recruitment_deviations[21]_1 -0.278785 -0.101795
+## 25 recruitment_deviations[22]_1 -0.535567 -0.088448
+## 26 recruitment_deviations[23]_1 -0.540889 -0.080331
+## 27 recruitment_deviations[24]_1 -0.268063 -0.053984
+## 28 recruitment_deviations[25]_1 -0.513178 -0.059541
+## 29 recruitment_deviations[26]_1 -0.319471 -0.047410
+## 30 recruitment_deviations[27]_1 -0.023067 -0.025905
+## 31 recruitment_deviations[28]_1  0.013173 -0.013861
+## 32 recruitment_deviations[29]_1 -0.216595 -0.001630
+## 33   logistic_selectivity_a50_2  1.435353  0.005055
+## 34 logistic_selectivity_slope_2  0.530762 -0.003737
+## 35   logistic_selectivity_a50_1  2.093519 -0.213407
+## 36 logistic_selectivity_slope_1  1.075676 -0.053617
+## 37    fishing_mortality[1][0]_1  0.027007  2.408971
+## 38    fishing_mortality[0][0]_1  0.009299  7.215736
+## 39   fishing_mortality[14][0]_1  0.180499  0.533373
+## 40   fishing_mortality[12][0]_1  0.116187  0.400725
+## 41    fishing_mortality[9][0]_1  0.132384  0.422033
+## 42   fishing_mortality[27][0]_1  0.477763  0.002259
+## 43   fishing_mortality[11][0]_1  0.160822  0.342151
+## 44   fishing_mortality[18][0]_1  0.260718  0.207054
+## 45   fishing_mortality[23][0]_1  0.366742  0.064126
+## 46    fishing_mortality[2][0]_1  0.045007  1.101068
+## 47    fishing_mortality[8][0]_1  0.109031  0.585343
+## 48    fishing_mortality[6][0]_1  0.087897  0.774051
+## 49   fishing_mortality[15][0]_1  0.160909  0.342079
+## 50   fishing_mortality[19][0]_1  0.260865  0.219170
+## 51    fishing_mortality[7][0]_1  0.185612  0.453692
+## 52   fishing_mortality[25][0]_1  0.339885  0.066378
+## 53   fishing_mortality[26][0]_1  0.336327 -0.074185
+## 54   fishing_mortality[16][0]_1  0.316962  0.289288
+## 55    fishing_mortality[4][0]_1  0.048611  1.159024
+## 56   fishing_mortality[29][0]_1  0.574117 -0.097235
+## 57    fishing_mortality[5][0]_1  0.088104  0.544192
+## 58   fishing_mortality[17][0]_1  0.260483  0.073721
+## 59    fishing_mortality[3][0]_1  0.061280  0.941195
+## 60   fishing_mortality[10][0]_1  0.149988  0.384068
+## 61   fishing_mortality[20][0]_1  0.361468  0.308981
+## 62   fishing_mortality[21][0]_1  0.265884  0.187322
+## 63   fishing_mortality[13][0]_1  0.167742  0.315977
+## 64   fishing_mortality[22][0]_1  0.437917  0.110236
+## 65   fishing_mortality[24][0]_1  0.367824  0.129315
+## 66   fishing_mortality[28][0]_1  0.368921 -0.261947
+## 67    f_initial_deviations[0]_1 -1.648338  0.093457
+## 68    f_initial_deviations[1]_1 -1.744784 -0.133180
+## 69    f_initial_deviations[2]_1 -1.705339 -0.165283
+## 70    f_initial_deviations[3]_1 -1.669910  0.070272
+## 71    f_initial_deviations[4]_1 -1.685477  0.127670
+## 72    f_initial_deviations[5]_1 -1.646643  0.067357
+## 73    f_initial_deviations[6]_1 -1.441582  0.181195
+## 74    f_initial_deviations[7]_1 -1.792625  0.026333
+## 75    f_initial_deviations[8]_1 -1.519825 -0.245455
+## 76    f_initial_deviations[9]_1 -1.909834  0.031006
+## 77   f_initial_deviations[10]_1 -1.593704  0.016290
+## 78   f_initial_deviations[11]_1 -1.828848  0.052453
+## 79    m_initial_deviations[0]_1 -1.648338  0.093457
+## 80    m_initial_deviations[1]_1 -1.744784 -0.133180
+## 81    m_initial_deviations[2]_1 -1.705339 -0.165283
+## 82    m_initial_deviations[3]_1 -1.669910  0.070272
+## 83    m_initial_deviations[4]_1 -1.685477  0.127670
+## 84    m_initial_deviations[5]_1 -1.646643  0.067357
+## 85    m_initial_deviations[6]_1 -1.441582  0.181195
+## 86    m_initial_deviations[7]_1 -1.792625  0.026333
+## 87    m_initial_deviations[8]_1 -1.519825 -0.245455
+## 88    m_initial_deviations[9]_1 -1.909834  0.031006
+## 89   m_initial_deviations[10]_1 -1.593704  0.016290
+## 90   m_initial_deviations[11]_1 -1.828848  0.052453</code></pre>
 </div>
 </div>
 <div id="compare-estimates-from-the-mas-with-true-values-from-the-om" class="section level2">
@@ -589,7 +554,6 @@
 <a href="#aggregate-true-values-of-key-variables-from-the-om" class="anchor"></a>Aggregate true values of key variables from the OM</h3>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">om</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
-
 <span class="va">om</span><span class="op">$</span><span class="va">biomass</span> <span class="op">&lt;-</span> <span class="va">om_output</span><span class="op">$</span><span class="va">biomass.mt</span>
 <span class="va">om</span><span class="op">$</span><span class="va">abundance</span> <span class="op">&lt;-</span> <span class="va">om_output</span><span class="op">$</span><span class="va">abundance</span><span class="op">/</span><span class="fl">1000</span>
 <span class="va">om</span><span class="op">$</span><span class="va">ssb</span> <span class="op">&lt;-</span> <span class="va">om_output</span><span class="op">$</span><span class="va">SSB</span>
@@ -618,9 +582,7 @@
 <span class="va">pop</span><span class="op">&lt;-</span><span class="va">popdy</span><span class="op">$</span><span class="va">populations</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="va">flt</span><span class="op">&lt;-</span><span class="va">popdy</span><span class="op">$</span><span class="va">fleets</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="va">srvy</span><span class="op">&lt;-</span><span class="va">popdy</span><span class="op">$</span><span class="va">surveys</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
-
 <span class="va">mas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
-
 <span class="va">mas</span><span class="op">$</span><span class="va">biomass</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">pop</span><span class="op">$</span><span class="va">undifferentiated</span><span class="op">$</span><span class="va">biomass</span><span class="op">$</span><span class="va">values</span><span class="op">)</span>
 <span class="va">mas</span><span class="op">$</span><span class="va">abundance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">pop</span><span class="op">$</span><span class="va">undifferentiated</span><span class="op">$</span><span class="va">abundance</span><span class="op">$</span><span class="va">values</span><span class="op">)</span>
 <span class="va">mas</span><span class="op">$</span><span class="va">ssb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">pop</span><span class="op">$</span><span class="va">undifferentiated</span><span class="op">$</span><span class="va">spawning_stock_biomass</span><span class="op">$</span><span class="va">values</span><span class="op">)</span>
@@ -717,15 +679,14 @@
                              <span class="st">"Fleet selectivity slope"</span>, 
                              <span class="st">"Survey selectivity A50"</span>, 
                              <span class="st">"Survey selectivity slope"</span><span class="op">)</span>
-
 <span class="va">summary_table</span></code></pre></div>
 <pre><code>##                                    OM          MAS
-## R0                       1.000000e+03 1.079063e+04
+## R0                       1.000000e+03 1.051904e+04
 ## q                        3.461319e-07 3.420000e-07
-## Fleet selectivity A50    2.000000e+00 2.093840e+00
-## Fleet selectivity slope  1.000000e+00 9.294717e-01
-## Survey selectivity A50   1.500000e+00 1.435461e+00
-## Survey selectivity slope 2.000000e+00 1.883750e+00</code></pre>
+## Fleet selectivity A50    2.000000e+00 2.093519e+00
+## Fleet selectivity slope  1.000000e+00 9.296480e-01
+## Survey selectivity A50   1.500000e+00 1.435353e+00
+## Survey selectivity slope 2.000000e+00 1.884084e+00</code></pre>
 </div>
 </div>
   </div>
